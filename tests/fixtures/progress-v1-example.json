@@ -1,0 +1,43 @@
+{
+  "format": "kino-kak-sposob-myshleniya-progress",
+  "schemaVersion": 1,
+  "exportedAt": "2026-10-28T17:00:00.000Z",
+  "appVersion": "0.1.0",
+  "progress": {
+    "createdAt": "2026-10-28T16:00:00.000Z",
+    "lastActiveDate": "2026-10-28",
+    "currentLevelId": "level-01",
+    "currentFilmId": "the-cabinet-of-dr-caligari",
+    "films": {
+      "the-cabinet-of-dr-caligari": {
+        "watchStatus": "watched",
+        "analysisStatus": "in-progress",
+        "watchedAt": "2026-10-28T16:30:00.000Z",
+        "completedAt": null,
+        "answers": {
+          "observation": "Геометрия декораций выглядит намеренно неестественной.",
+          "feeling": "Пространство вызывает тревогу.",
+          "hypothesis": "Мир кажется отражением нестабильного восприятия.",
+          "evidence": "Наклонные стены и резкие тени повторяются в нескольких сценах."
+        },
+        "notes": [],
+        "exerciseCompleted": false,
+        "isFavorite": false,
+        "updatedAt": "2026-10-28T16:50:00.000Z"
+      }
+    },
+    "levels": {},
+    "achievements": [
+      {
+        "id": "first-viewing",
+        "unlockedAt": "2026-10-28T16:31:00.000Z"
+      }
+    ],
+    "xp": 20,
+    "settings": {
+      "showGamification": true,
+      "reducedMotion": false,
+      "textScale": "normal"
+    }
+  }
+}

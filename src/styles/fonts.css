@@ -1,0 +1,38 @@
+/*
+ * Шрифты встраиваются в dist/index.html как data:, поэтому только woff2
+ * с кириллицей и латиницей (файлы из src/assets/fonts, лицензии рядом).
+ *
+ * Ubuntu — заголовки, Roboto — основной текст,
+ * Tektur — подписи над заголовками, метки, номера, цифры.
+ */
+
+@font-face {
+  font-family: 'Ubuntu';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../assets/fonts/Ubuntu-Medium.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Ubuntu';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../assets/fonts/Ubuntu-Bold.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 300 800;
+  font-display: swap;
+  src: url('../assets/fonts/Roboto.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Tektur';
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url('../assets/fonts/Tektur.woff2') format('woff2');
+}

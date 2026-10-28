@@ -1,0 +1,210 @@
+/*
+ * Две темы:
+ * «пергамент» — светлая бумага, тушь, киноварь печати и пастельные заливки;
+ * «кинозал» — тёплая темнота зала, серебро интертитров, приглушённая пастель.
+ *
+ * Пастель — шесть оттенков (`--tint-*`): заливка и «чернила» того же тона для
+ * текста и линий поверх неё. У каждого уровня свой оттенок (data-tint,
+ * см. shared/tint.ts); цвет только украшает — смысл всегда есть в тексте.
+ *
+ * Тема выбирается так: data-theme="light" | "dark" на <html> — явный выбор
+ * пользователя; без атрибута — по системной настройке.
+ * Пары «текст/фон» подобраны с контрастом не ниже WCAG AA (см. план, этап 5.1).
+ */
+
+:root {
+  color-scheme: light;
+
+  --paper: #f7f0e6;
+  --paper-raised: #fffaf3;
+  --paper-sunken: #efe5d6;
+  --ink: #2b2230;
+  --ink-soft: #594d5c;
+  --ink-faint: #6f6372;
+  --line: #e2d5c6;
+  --line-strong: #9a8a90;
+  --accent: #9a2e1c;
+  --accent-ink: #fbf5ea;
+  --accent-wash: rgb(154 46 28 / 0.09);
+  --moss: #4f5e33;
+  --moss-wash: rgb(79 94 51 / 0.12);
+  --gold: #835d17;
+  --focus: #26507a;
+  --shadow: 0 1px 0 rgb(60 40 70 / 0.05), 0 10px 26px -14px rgb(80 50 90 / 0.35);
+
+  --tint-rose: #f9dde0;
+  --tint-rose-ink: #9b3f4f;
+  --tint-peach: #fbe2cc;
+  --tint-peach-ink: #94501f;
+  --tint-butter: #f8edc0;
+  --tint-butter-ink: #7a5f0e;
+  --tint-mint: #d6efdf;
+  --tint-mint-ink: #2f6b4a;
+  --tint-sky: #d8e8f7;
+  --tint-sky-ink: #34608f;
+  --tint-lavender: #e6def6;
+  --tint-lavender-ink: #5f4a9a;
+
+  --grain-opacity: 0.07;
+  --grain-blend: multiply;
+
+  --hero-sky-top: #e9dcf3;
+  --hero-sky-bottom: #fde6d6;
+  --hero-moon: #fffaf0;
+  --hero-moon-halo: rgb(255 246 236 / 0.8);
+  --hero-cloud: #f6d3da;
+  --hero-hill-far: #d9d6ee;
+  --hero-hill-mid: #b8c9e3;
+  --hero-hill-near: #8d9fc2;
+  --hero-ground: #4b4766;
+  --hero-ink: #2f2a42;
+  --hero-figure: #2f2a42;
+  --hero-bar: #221d2b;
+  --hero-hole: #f7f0e6;
+  --hero-stars: 0;
+  /* Насколько гаснет луч на «вдохе» (0 — не дышит). */
+  --hero-beam-breath: 0;
+
+  --frame-lit-a: #fbe2cc;
+  --frame-lit-b: #f9dde0;
+
+  --intertitle-bg: #17130f;
+  --intertitle-ink: #efe6d2;
+  --intertitle-line: #9c8768;
+
+  --font-display: 'Ubuntu', 'Segoe UI', Arial, sans-serif;
+  --font-body: 'Roboto', 'Segoe UI', Arial, sans-serif;
+  --font-accent: 'Tektur', 'Segoe UI', Arial, sans-serif;
+
+  --radius-s: 6px;
+  --radius-m: 14px;
+  --measure: 40rem;
+  --page: 72rem;
+  --gutter: clamp(1rem, 4vw, 2rem);
+  --header-h: 4rem;
+
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --dur: 180ms;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+
+    --paper: #16131a;
+    --paper-raised: #201c25;
+    --paper-sunken: #0f0d12;
+    --ink: #efe6dc;
+    --ink-soft: #c2b5b8;
+    --ink-faint: #a0939a;
+    --line: #3a3340;
+    --line-strong: #7d7080;
+    --accent: #e48a70;
+    --accent-ink: #1a120d;
+    --accent-wash: rgb(228 138 112 / 0.12);
+    --moss: #adbb82;
+    --moss-wash: rgb(173 187 130 / 0.14);
+    --gold: #d6b366;
+    --focus: #9cc3e6;
+    --shadow: 0 1px 0 rgb(0 0 0 / 0.4), 0 10px 24px -12px rgb(0 0 0 / 0.8);
+
+    --tint-rose: #3b252c;
+    --tint-rose-ink: #f2b0bb;
+    --tint-peach: #3a2a20;
+    --tint-peach-ink: #f3bf98;
+    --tint-butter: #35301d;
+    --tint-butter-ink: #e9d48e;
+    --tint-mint: #1e3329;
+    --tint-mint-ink: #a2d8b8;
+    --tint-sky: #1d2a3b;
+    --tint-sky-ink: #a6c8ee;
+    --tint-lavender: #2b2540;
+    --tint-lavender-ink: #c9bbf2;
+
+    --grain-opacity: 0.11;
+    --grain-blend: screen;
+
+    --hero-sky-top: #100f22;
+    --hero-sky-bottom: #2c2340;
+    --hero-moon: #f3ead8;
+    --hero-moon-halo: rgb(243 222 230 / 0.24);
+    --hero-cloud: #3a2f4a;
+    --hero-hill-far: #2b2840;
+    --hero-hill-mid: #201e33;
+    --hero-hill-near: #151424;
+    --hero-ground: #0b0a12;
+    --hero-ink: #07060b;
+    --hero-figure: #07060b;
+    --hero-bar: #060509;
+    --hero-hole: #2b2533;
+    --hero-stars: 0.85;
+    --hero-beam-breath: 0.45;
+
+    --frame-lit-a: #f3d9a8;
+    --frame-lit-b: #f2c4cc;
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --paper: #16131a;
+  --paper-raised: #201c25;
+  --paper-sunken: #0f0d12;
+  --ink: #efe6dc;
+  --ink-soft: #c2b5b8;
+  --ink-faint: #a0939a;
+  --line: #3a3340;
+  --line-strong: #7d7080;
+  --accent: #e48a70;
+  --accent-ink: #1a120d;
+  --accent-wash: rgb(228 138 112 / 0.12);
+  --moss: #adbb82;
+  --moss-wash: rgb(173 187 130 / 0.14);
+  --gold: #d6b366;
+  --focus: #9cc3e6;
+  --shadow: 0 1px 0 rgb(0 0 0 / 0.4), 0 10px 24px -12px rgb(0 0 0 / 0.8);
+
+  --tint-rose: #3b252c;
+  --tint-rose-ink: #f2b0bb;
+  --tint-peach: #3a2a20;
+  --tint-peach-ink: #f3bf98;
+  --tint-butter: #35301d;
+  --tint-butter-ink: #e9d48e;
+  --tint-mint: #1e3329;
+  --tint-mint-ink: #a2d8b8;
+  --tint-sky: #1d2a3b;
+  --tint-sky-ink: #a6c8ee;
+  --tint-lavender: #2b2540;
+  --tint-lavender-ink: #c9bbf2;
+
+  --grain-opacity: 0.11;
+  --grain-blend: screen;
+
+  --hero-sky-top: #100f22;
+  --hero-sky-bottom: #2c2340;
+  --hero-moon: #f3ead8;
+  --hero-moon-halo: rgb(243 222 230 / 0.24);
+  --hero-cloud: #3a2f4a;
+  --hero-hill-far: #2b2840;
+  --hero-hill-mid: #201e33;
+  --hero-hill-near: #151424;
+  --hero-ground: #0b0a12;
+  --hero-ink: #07060b;
+  --hero-figure: #07060b;
+  --hero-bar: #060509;
+  --hero-hole: #2b2533;
+  --hero-stars: 0.85;
+  --hero-beam-breath: 0.45;
+
+  --frame-lit-a: #f3d9a8;
+  --frame-lit-b: #f2c4cc;
+}
+
+/* Размер текста — настройка пользователя (ТЗ §34). */
+:root[data-text-scale='small'] {
+  font-size: 93.75%;
+}
+:root[data-text-scale='large'] {
+  font-size: 112.5%;
+}
