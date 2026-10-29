@@ -72,7 +72,7 @@ const LEVEL_TINTS = ['rose', 'peach', 'butter', 'mint', 'sky', 'lavender']
  */
 export function tokenPairs(theme) {
   const c = (name) => parseColor(theme[name])
-  const surfaces = { 'бумага': c('--paper'), 'карточка': c('--paper-raised'), 'углубление': c('--paper-sunken') }
+  const surfaces = { бумага: c('--paper'), карточка: c('--paper-raised'), углубление: c('--paper-sunken') }
   const pairs = []
   for (const [bgName, bg] of Object.entries(surfaces)) {
     for (const fg of ['--ink', '--ink-soft', '--ink-faint', '--accent', '--moss', '--gold']) {
@@ -127,7 +127,12 @@ export function auditPage() {
     const [a, b] = [lum(over(fg, bg)), lum(bg)].sort((x, y) => y - x)
     return (a + 0.05) / (b + 0.05)
   }
-  const hex = (c) => '#' + c.slice(0, 3).map((v) => Math.round(v).toString(16).padStart(2, '0')).join('')
+  const hex = (c) =>
+    '#' +
+    c
+      .slice(0, 3)
+      .map((v) => Math.round(v).toString(16).padStart(2, '0'))
+      .join('')
   const COLOR = /(?:rgba?|color|oklab|oklch)\([^()]*\)/g
 
   // Варианты фона под элементом: слои предков сверху вниз до первого непрозрачного.
@@ -159,7 +164,11 @@ export function auditPage() {
 
   const found = []
   for (const el of document.body.querySelectorAll('*')) {
-    const text = [...el.childNodes].filter((n) => n.nodeType === 3).map((n) => n.textContent).join('').trim()
+    const text = [...el.childNodes]
+      .filter((n) => n.nodeType === 3)
+      .map((n) => n.textContent)
+      .join('')
+      .trim()
     if (!text || hidden(el)) continue
     const s = getComputedStyle(el)
     const fg = rgba(s.color)

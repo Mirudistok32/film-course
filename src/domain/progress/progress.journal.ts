@@ -76,14 +76,16 @@ export function journalEntries(course: Course, p: UserProgress): JournalEntry[] 
   for (const [filmId, fp] of Object.entries(p.films)) {
     const film = course.filmById.get(filmId)
     const parts = analysisParts(p, filmId)
-    if (film && parts.length) entries.push({ type: 'analysis', id: `analysis-${filmId}`, date: fp.updatedAt, film, parts })
+    if (film && parts.length)
+      entries.push({ type: 'analysis', id: `analysis-${filmId}`, date: fp.updatedAt, film, parts })
   }
   return entries.sort((a, b) => b.date.localeCompare(a.date))
 }
 
 function entryText(entry: JournalEntry): string {
   const film = entry.film ? `${entry.film.title} ${entry.film.director}` : ''
-  const body = entry.type === 'note' ? `${entry.note.text} ${entry.note.tags.join(' ')}` : entry.parts.map((x) => x.text).join(' ')
+  const body =
+    entry.type === 'note' ? `${entry.note.text} ${entry.note.tags.join(' ')}` : entry.parts.map((x) => x.text).join(' ')
   return searchable(`${film} ${body}`)
 }
 
@@ -106,6 +108,9 @@ export function filterJournal(entries: JournalEntry[], filter: JournalFilter): J
 }
 
 /** Рекомендуемый шаблон записи (ТЗ §13); писать по нему необязательно. */
-export const NOTE_TEMPLATE = ['Я заметил: ', 'Это заставило почувствовать: ', 'Возможно, это означает: ', 'На это указывает: '].join(
-  '\n',
-)
+export const NOTE_TEMPLATE = [
+  'Я заметил: ',
+  'Это заставило почувствовать: ',
+  'Возможно, это означает: ',
+  'На это указывает: ',
+].join('\n')

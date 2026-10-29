@@ -27,7 +27,14 @@ const arcSize = computed(() => Math.min(13, 118 / Math.max(props.text.length * 0
 </script>
 
 <template>
-  <svg class="hanko" :class="{ 'hanko--press': press }" viewBox="0 0 100 100" role="img" :aria-label="`Печать: ${props.text}`" focusable="false">
+  <svg
+    class="hanko"
+    :class="{ 'hanko--press': press }"
+    viewBox="0 0 100 100"
+    role="img"
+    :aria-label="`Печать: ${props.text}`"
+    focusable="false"
+  >
     <defs>
       <filter :id="`${uid}-rough`" x="-5%" y="-5%" width="110%" height="110%">
         <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7" result="noise" />

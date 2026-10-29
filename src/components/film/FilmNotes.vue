@@ -23,7 +23,10 @@ const notes = computed(() =>
   [...notesForFilm(store.progress, props.filmId)].sort((a, b) => b.createdAt.localeCompare(a.createdAt)),
 )
 
-const KINDS = (['observation', 'hypothesis', 'question', 'free'] as const).map((k) => ({ value: k, label: NOTE_KIND_LABEL[k] }))
+const KINDS = (['observation', 'hypothesis', 'question', 'free'] as const).map((k) => ({
+  value: k,
+  label: NOTE_KIND_LABEL[k],
+}))
 const kind = ref<NoteKind>('observation')
 const text = ref('')
 const message = ref('')

@@ -38,11 +38,15 @@ const tabs = ref<HTMLElement[]>([])
 function onTabKey(event: KeyboardEvent, index: number) {
   const last = FILM_STAGES.length - 1
   const target =
-    event.key === 'ArrowRight' ? (index + 1) % (last + 1)
-    : event.key === 'ArrowLeft' ? (index + last) % (last + 1)
-    : event.key === 'Home' ? 0
-    : event.key === 'End' ? last
-    : -1
+    event.key === 'ArrowRight'
+      ? (index + 1) % (last + 1)
+      : event.key === 'ArrowLeft'
+        ? (index + last) % (last + 1)
+        : event.key === 'Home'
+          ? 0
+          : event.key === 'End'
+            ? last
+            : -1
   const s = FILM_STAGES[target]
   if (!s) return
   event.preventDefault()
@@ -88,7 +92,8 @@ onBeforeUnmount(() => observer?.disconnect())
       >
         <span class="tab__num" aria-hidden="true">{{ i + 1 }}</span>
         <span class="tab__label">
-          <span class="tab__short">{{ SHORT[s] }}</span><span class="tab__rest">{{ FILM_STAGE_LABEL[s].slice(SHORT[s].length) }}</span>
+          <span class="tab__short">{{ SHORT[s] }}</span
+          ><span class="tab__rest">{{ FILM_STAGE_LABEL[s].slice(SHORT[s].length) }}</span>
         </span>
       </button>
     </div>

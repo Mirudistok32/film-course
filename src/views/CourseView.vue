@@ -73,8 +73,8 @@ function toggleAbout(levelId: string) {
       <p class="eyebrow">{{ stats.totalLevels }} уровней · {{ stats.totalFilms }} {{ films(stats.totalFilms) }}</p>
       <h1>Карта курса</h1>
       <p class="course__lead">
-        Уровни идут от рождения киноязыка к целостной мысли о фильме. Рекомендуемый порядок — сверху вниз:
-        каждый следующий уровень опирается на навык предыдущего.
+        Уровни идут от рождения киноязыка к целостной мысли о фильме. Рекомендуемый порядок — сверху вниз: каждый
+        следующий уровень опирается на навык предыдущего.
       </p>
       <div class="course__meters">
         <ProgressMeter
@@ -91,8 +91,8 @@ function toggleAbout(levelId: string) {
       </div>
       <p class="course__mode">
         <template v-if="strict">
-          Включён строгий порядок: уровень открывается для заданий после завершения предыдущего. Закрытые уровни
-          можно читать в режиме обзора.
+          Включён строгий порядок: уровень открывается для заданий после завершения предыдущего. Закрытые уровни можно
+          читать в режиме обзора.
         </template>
         <template v-else>Любой уровень можно открыть сразу — порядок подсказывает путь, но не запрещает.</template>
         <RouterLink :to="{ name: 'data' }">Изменить в настройках</RouterLink>
@@ -112,7 +112,9 @@ function toggleAbout(levelId: string) {
           >
             <LevelEmblem :level="level.number" class="reel__emblem" />
             <span class="reel__num" aria-hidden="true">{{ level.number }}</span>
-            <span class="visually-hidden">Уровень {{ level.number }}: {{ level.title }} — {{ LEVEL_STATUS_LABEL[status] }}</span>
+            <span class="visually-hidden"
+              >Уровень {{ level.number }}: {{ level.title }} — {{ LEVEL_STATUS_LABEL[status] }}</span
+            >
           </button>
         </li>
       </ol>
@@ -151,7 +153,8 @@ function toggleAbout(levelId: string) {
               :aria-controls="`purpose-${level.id}`"
               @click="toggleAbout(level.id)"
             >
-              {{ expanded.has(level.id) ? 'Свернуть' : 'Подробнее' }}<span class="visually-hidden"> о цели уровня {{ level.number }}</span>
+              {{ expanded.has(level.id) ? 'Свернуть' : 'Подробнее'
+              }}<span class="visually-hidden"> о цели уровня {{ level.number }}</span>
             </button>
           </div>
         </div>
@@ -163,7 +166,9 @@ function toggleAbout(levelId: string) {
             :max="ls.total"
             :label="`${ls.completed} из ${ls.total} ${plural(ls.total, ['фильма', 'фильмов', 'фильмов'])} пройдено · просмотрено ${ls.watched}`"
           />
-          <p v-if="status === 'locked'" class="frame__note">Откроется после уровня {{ level.number - 1 }}; читать можно уже сейчас</p>
+          <p v-if="status === 'locked'" class="frame__note">
+            Откроется после уровня {{ level.number - 1 }}; читать можно уже сейчас
+          </p>
         </div>
         <span v-if="status === 'completed' || status === 'review'" class="frame__stamp" aria-hidden="true">
           <HankoStamp text="уровень пройден" :center="String(level.number)" />
@@ -181,10 +186,12 @@ function toggleAbout(levelId: string) {
       <p class="eyebrow">Финал курса</p>
       <h2 id="finale-title">Выпускная работа</h2>
       <p class="finale__text">
-        Разбор одного фильма по вашему выбору: главный вопрос, несколько формальных решений и интерпретация, которая
-        на них опирается. Критерии видны заранее — начинать можно в любой момент.
+        Разбор одного фильма по вашему выбору: главный вопрос, несколько формальных решений и интерпретация, которая на
+        них опирается. Критерии видны заранее — начинать можно в любой момент.
       </p>
-      <p class="finale__status">Статус: <strong>{{ graduation }}</strong></p>
+      <p class="finale__status">
+        Статус: <strong>{{ graduation }}</strong>
+      </p>
       <AppButton :to="{ name: 'graduation' }">Открыть выпускную работу</AppButton>
     </section>
   </div>
@@ -263,7 +270,12 @@ function toggleAbout(levelId: string) {
   align-items: center;
   gap: 1rem 1.5rem;
   padding: clamp(1rem, 2.5vw, 1.4rem) clamp(1rem, 3vw, 1.75rem);
-  background: linear-gradient(100deg, var(--tint) 0, color-mix(in srgb, var(--tint) 40%, var(--paper-raised)) 9rem, var(--paper-raised) 60%);
+  background: linear-gradient(
+    100deg,
+    var(--tint) 0,
+    color-mix(in srgb, var(--tint) 40%, var(--paper-raised)) 9rem,
+    var(--paper-raised) 60%
+  );
   border-radius: 3px;
 }
 .frame--current {

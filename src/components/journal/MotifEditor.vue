@@ -73,7 +73,11 @@ defineExpose({ clear })
 
 <template>
   <form class="editor" @submit.prevent="submit">
-    <TextField v-model="title" label="Мотив" hint="Короткое имя образа: «окно», «лестница», «дождь», «взгляд в камеру»." />
+    <TextField
+      v-model="title"
+      label="Мотив"
+      hint="Короткое имя образа: «окно», «лестница», «дождь», «взгляд в камеру»."
+    />
     <AnswerField
       v-model="description"
       label="Что он делает"
@@ -90,7 +94,9 @@ defineExpose({ clear })
       </div>
       <ul v-if="films.length" class="films__list">
         <li v-for="film in films" :key="film.id" class="films__item">
-          <span>{{ film.title }} <span class="films__year">· {{ film.year }}</span></span>
+          <span
+            >{{ film.title }} <span class="films__year">· {{ film.year }}</span></span
+          >
           <AppButton variant="ghost" @click="removeFilm(film)">
             Убрать<span class="visually-hidden"> «{{ film.title }}»</span>
           </AppButton>

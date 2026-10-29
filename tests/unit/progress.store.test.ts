@@ -131,7 +131,10 @@ describe('импорт и сброс', () => {
     store.apply((p, now) => markWatched(p, f1, now))
     const before = store.progress
     const savedBefore = storage.getItem(STORAGE_KEY)
-    const r = parseImportText(JSON.stringify({ format: 'kino-kak-sposob-myshleniya-progress', schemaVersion: 7, progress: {} }), course)
+    const r = parseImportText(
+      JSON.stringify({ format: 'kino-kak-sposob-myshleniya-progress', schemaVersion: 7, progress: {} }),
+      course,
+    )
     expect(r.ok).toBe(false)
     expect(store.progress).toBe(before)
     expect(storage.getItem(STORAGE_KEY)).toBe(savedBefore)

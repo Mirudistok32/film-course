@@ -63,12 +63,13 @@ export type AchievementGroup = 'first-steps' | 'explorer' | 'course' | 'mastery'
 export type AchievementFigure = 'circle' | 'diamond' | 'shield' | 'octagon'
 
 /** У каждой группы своя форма значка: раздел различим не только цветом (ТЗ §34). */
-export const ACHIEVEMENT_GROUPS: Record<AchievementGroup, { title: string; shape: string; figure: AchievementFigure }> = {
-  'first-steps': { title: 'Первые шаги', shape: 'круглая печать', figure: 'circle' },
-  explorer: { title: 'Исследователь', shape: 'ромб', figure: 'diamond' },
-  course: { title: 'Прогресс по курсу', shape: 'щит', figure: 'shield' },
-  mastery: { title: 'Мастерство', shape: 'восьмиугольник', figure: 'octagon' },
-}
+export const ACHIEVEMENT_GROUPS: Record<AchievementGroup, { title: string; shape: string; figure: AchievementFigure }> =
+  {
+    'first-steps': { title: 'Первые шаги', shape: 'круглая печать', figure: 'circle' },
+    explorer: { title: 'Исследователь', shape: 'ромб', figure: 'diamond' },
+    course: { title: 'Прогресс по курсу', shape: 'щит', figure: 'shield' },
+    mastery: { title: 'Мастерство', shape: 'восьмиугольник', figure: 'octagon' },
+  }
 
 export interface RewardFacts {
   course: Course
@@ -121,7 +122,9 @@ export const ACHIEVEMENTS: readonly AchievementDefinition[] = [
     check: (f) =>
       films(f).some(
         ([, fp]) =>
-          isMeaningful(fp.answers.observation) && isMeaningful(fp.answers.feeling) && isMeaningful(fp.answers.hypothesis),
+          isMeaningful(fp.answers.observation) &&
+          isMeaningful(fp.answers.feeling) &&
+          isMeaningful(fp.answers.hypothesis),
       ),
   },
   {
@@ -148,8 +151,7 @@ export const ACHIEVEMENTS: readonly AchievementDefinition[] = [
     description: 'Три просмотренных фильма, к каждому есть содержательная запись.',
     hint: 'Посмотрите три фильма и к каждому оставьте хотя бы одно наблюдение.',
     group: 'explorer',
-    check: (f) =>
-      [...f.meaningfulFilmIds].filter((id) => f.progress.films[id]?.watchStatus === 'watched').length >= 3,
+    check: (f) => [...f.meaningfulFilmIds].filter((id) => f.progress.films[id]?.watchStatus === 'watched').length >= 3,
   },
   {
     id: 'not-only-plot',
@@ -175,9 +177,12 @@ export const ACHIEVEMENTS: readonly AchievementDefinition[] = [
     group: 'explorer',
     check: (f) =>
       films(f).some(([, fp]) => isMeaningful(fp.answers.hypothesis) && isMeaningful(fp.answers.altHypothesis)) ||
-      Object.values(groupBy(f.progress.notes.filter((n) => n.kind === 'hypothesis' && n.filmId && isMeaningful(n.text)), (n) => n.filmId ?? '')).some(
-        (list) => list.length >= 2,
-      ),
+      Object.values(
+        groupBy(
+          f.progress.notes.filter((n) => n.kind === 'hypothesis' && n.filmId && isMeaningful(n.text)),
+          (n) => n.filmId ?? '',
+        ),
+      ).some((list) => list.length >= 2),
   },
   {
     id: 'open-question',

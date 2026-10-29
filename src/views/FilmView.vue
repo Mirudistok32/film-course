@@ -68,7 +68,9 @@ usePageTitle(() => (film.value ? `${film.value.title} (${film.value.year})` : '�
 const fp = computed(() => (film.value ? p.value.films[film.value.id] : undefined))
 const status = computed(() => filmDisplayStatus(fp.value))
 const locked = computed(() => (level.value ? isLevelLocked(course.value, level.value, p.value) : false))
-const prevLevel = computed(() => (level.value ? (course.value.levels[course.value.levels.indexOf(level.value) - 1] ?? null) : null))
+const prevLevel = computed(() =>
+  level.value ? (course.value.levels[course.value.levels.indexOf(level.value) - 1] ?? null) : null,
+)
 const neighbours = computed(() =>
   film.value && level.value ? filmNeighbours(level.value, film.value.id) : { prev: null, next: null },
 )
@@ -81,9 +83,7 @@ const facts = computed(() => {
 })
 
 const terms = computed(() =>
-  (lesson.value?.terms ?? [])
-    .map((id) => course.value.termById.get(id))
-    .filter((t): t is GlossaryTerm => Boolean(t)),
+  (lesson.value?.terms ?? []).map((id) => course.value.termById.get(id)).filter((t): t is GlossaryTerm => Boolean(t)),
 )
 
 const gamified = computed(() => store.settings.showGamification)
@@ -96,7 +96,9 @@ const stepsLabel = computed(() => {
   const s = steps.value
   if (!s) return ''
   // Неразрывный пробел перед тире: строка не начинается с «— упражнение».
-  return s.next ? `Шаги фильма: ${s.done} из ${s.total}. Дальше\u00a0— ${s.next}` : `Все ${s.total} ${plural(s.total, ['шаг', 'шага', 'шагов'])} фильма пройдены`
+  return s.next
+    ? `Шаги фильма: ${s.done} из ${s.total}. Дальше\u00a0— ${s.next}`
+    : `Все ${s.total} ${plural(s.total, ['шаг', 'шага', 'шагов'])} фильма пройдены`
 })
 
 /* ---------- Шаги урока ---------- */
@@ -247,7 +249,15 @@ function finishFilm() {
       <aside class="card status" :data-tint="levelTint(level.number)" aria-label="Ваш статус и действия">
         <StatusBadge :film="status" />
         <!-- key: при переходе к соседнему фильму полоса появляется заново, без заливки чужих кадров. -->
-        <ProgressMeter v-if="steps" :key="film.id" class="status__steps" :value="steps.done" :max="steps.total" :lit="steps.lit" :label="stepsLabel" />
+        <ProgressMeter
+          v-if="steps"
+          :key="film.id"
+          class="status__steps"
+          :value="steps.done"
+          :max="steps.total"
+          :lit="steps.lit"
+          :label="stepsLabel"
+        />
         <template v-if="!locked">
           <template v-if="fp?.watchStatus === 'watched'">
             <p class="status__fact">Просмотрен {{ formatDate(fp.watchedAt) }}</p>
@@ -259,7 +269,13 @@ function finishFilm() {
           </div>
           <div class="status__row">
             <AppButton variant="ghost" :aria-pressed="Boolean(fp?.isFavorite)" @click="toggleFavorite">
-              <svg class="icon" :class="{ 'icon--on': fp?.isFavorite }" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <svg
+                class="icon"
+                :class="{ 'icon--on': fp?.isFavorite }"
+                viewBox="0 0 16 16"
+                aria-hidden="true"
+                focusable="false"
+              >
                 <path d="M8 1.8l1.9 3.9 4.3.6-3.1 3 .7 4.3L8 11.6l-3.8 2 .7-4.3-3.1-3 4.3-.6z" />
               </svg>
               {{ fp?.isFavorite ? 'В избранном' : 'В избранное' }}
@@ -291,7 +307,14 @@ function finishFilm() {
 
     <section ref="lessonEl" class="lesson" aria-label="Урок">
       <!-- Перед просмотром: короткая настройка внимания сразу, без длинной лекции. -->
-      <div v-show="stage === 'before'" id="panel-before" class="panel" role="tabpanel" aria-labelledby="tab-before" tabindex="0">
+      <div
+        v-show="stage === 'before'"
+        id="panel-before"
+        class="panel"
+        role="tabpanel"
+        aria-labelledby="tab-before"
+        tabindex="0"
+      >
         <template v-if="lesson">
           <h2 class="panel__title">Короткая настройка внимания</h2>
           <div class="before">
@@ -323,7 +346,14 @@ function finishFilm() {
       </div>
 
       <!-- Во время просмотра: несколько ориентиров, без таймкодов. -->
-      <div v-show="stage === 'during'" id="panel-during" class="panel" role="tabpanel" aria-labelledby="tab-during" tabindex="0">
+      <div
+        v-show="stage === 'during'"
+        id="panel-during"
+        class="panel"
+        role="tabpanel"
+        aria-labelledby="tab-during"
+        tabindex="0"
+      >
         <h2 class="panel__title">Ориентиры на время просмотра</h2>
         <p class="panel__lead">
           Страницу можно оставить открытой или вернуться к ней после. Таймкоды не нужны: версии фильма отличаются
@@ -342,7 +372,14 @@ function finishFilm() {
       </div>
 
       <!-- После просмотра: цепочка ответа и основное упражнение. -->
-      <div v-show="stage === 'after'" id="panel-after" class="panel" role="tabpanel" aria-labelledby="tab-after" tabindex="0">
+      <div
+        v-show="stage === 'after'"
+        id="panel-after"
+        class="panel"
+        role="tabpanel"
+        aria-labelledby="tab-after"
+        tabindex="0"
+      >
         <h2 class="panel__title">Вопросы после просмотра</h2>
         <p class="panel__lead">
           От наблюдения к мысли: сначала то, что видно и слышно, потом чувство, гипотеза и довод. На каждое поле хватит
@@ -377,20 +414,34 @@ function finishFilm() {
       <template v-else>
         <p class="completion__lead">
           Просмотр отмечается отдельно от разбора: факт просмотра не потеряется, даже если сейчас нет сил отвечать.
-          <template v-if="store.settings.lightMode">Включён облегчённый режим: вместо упражнения хватит короткой записи.</template>
+          <template v-if="store.settings.lightMode"
+            >Включён облегчённый режим: вместо упражнения хватит короткой записи.</template
+          >
         </p>
         <CriteriaList :criteria="criteria" />
       </template>
 
       <div v-if="!locked" class="completion__actions">
-        <AppButton v-if="!fp?.completedAt" variant="primary" :disabled="!canComplete" aria-describedby="film-completion-hint" @click="finishFilm">
+        <AppButton
+          v-if="!fp?.completedAt"
+          variant="primary"
+          :disabled="!canComplete"
+          aria-describedby="film-completion-hint"
+          @click="finishFilm"
+        >
           Отметить фильм пройденным
         </AppButton>
         <AppButton v-else :aria-pressed="Boolean(fp.reviewing)" @click="toggleReviewing">
           {{ fp.reviewing ? 'Разбираю повторно — снять' : 'Разбираю повторно' }}
         </AppButton>
         <AppButton variant="ghost" :aria-pressed="Boolean(fp?.revisitLater)" @click="toggleRevisit">
-          <svg class="icon" :class="{ 'icon--on': fp?.revisitLater }" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+          <svg
+            class="icon"
+            :class="{ 'icon--on': fp?.revisitLater }"
+            viewBox="0 0 16 16"
+            aria-hidden="true"
+            focusable="false"
+          >
             <path d="M4 1.8h8v12.4l-4-3-4 3z" />
           </svg>
           {{ fp?.revisitLater ? 'Вернусь позже — отмечено' : 'Хочу вернуться позже' }}
@@ -402,7 +453,11 @@ function finishFilm() {
     </section>
 
     <nav class="neighbours" aria-label="Соседние фильмы">
-      <RouterLink v-if="neighbours.prev" :to="{ name: 'film', params: { filmId: neighbours.prev.id } }" class="neighbour">
+      <RouterLink
+        v-if="neighbours.prev"
+        :to="{ name: 'film', params: { filmId: neighbours.prev.id } }"
+        class="neighbour"
+      >
         <span class="neighbour__dir">← Фильм {{ neighbours.prev.order }}</span>
         <span class="neighbour__title">{{ neighbours.prev.title }}</span>
       </RouterLink>

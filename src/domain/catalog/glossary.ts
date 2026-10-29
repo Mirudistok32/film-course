@@ -31,7 +31,15 @@ export interface GlossarySection {
 /** Ищет по всей статье и по названию фильма из примера. */
 export function termMatches(course: Course, term: GlossaryTerm, query: string): boolean {
   const film = course.filmById.get(term.example.filmId)
-  const text = [term.term, term.aka, term.simple, term.professional, term.noticeQuestion, term.example.text, film?.title]
+  const text = [
+    term.term,
+    term.aka,
+    term.simple,
+    term.professional,
+    term.noticeQuestion,
+    term.example.text,
+    film?.title,
+  ]
   return containsWords(searchable(text.filter(Boolean).join(' ')), query)
 }
 

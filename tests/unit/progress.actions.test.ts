@@ -196,7 +196,13 @@ describe('статус уровня и следующий шаг', () => {
     p = markWatched(p, filmId, T0)
     expect(courseMap(course, p)[0]!.status).toBe('in-progress')
 
-    p = { ...p, levels: { ...p.levels, [level1.id]: { reflection: 'итог', reflectionUpdatedAt: null, completedAt: T0.toISOString() } } }
+    p = {
+      ...p,
+      levels: {
+        ...p.levels,
+        [level1.id]: { reflection: 'итог', reflectionUpdatedAt: null, completedAt: T0.toISOString() },
+      },
+    }
     const after = courseMap(course, p)
     expect(after[0]!.status).toBe('completed')
     expect(after[0]!.isCurrent).toBe(false)
@@ -225,12 +231,22 @@ describe('статус уровня и следующий шаг', () => {
     for (const f of level1.films) p = finish(p, f.id)
     expect(levelContinue(course, level1, p).kind).toBe('complete')
 
-    p = completeLevel(setLevelReflection(p, level1.id, 'Я научился видеть, как монтаж меняет смысл кадров', T0), level1, T0)
+    p = completeLevel(
+      setLevelReflection(p, level1.id, 'Я научился видеть, как монтаж меняет смысл кадров', T0),
+      level1,
+      T0,
+    )
     const next = levelContinue(course, level1, p)
     expect(next.kind === 'next-level' && next.level.id === course.levels[1]!.id).toBe(true)
 
     const last = course.levels[course.levels.length - 1]!
-    const done = { ...p, levels: { ...p.levels, [last.id]: { reflection: 'итог', reflectionUpdatedAt: null, completedAt: T0.toISOString() } } }
+    const done = {
+      ...p,
+      levels: {
+        ...p.levels,
+        [last.id]: { reflection: 'итог', reflectionUpdatedAt: null, completedAt: T0.toISOString() },
+      },
+    }
     expect(levelContinue(course, last, done).kind).toBe('graduation')
   })
 
@@ -290,7 +306,10 @@ describe('блок «Продолжить» на главной', () => {
     expect(r.filmsLeft).toBe(0)
 
     const levels = Object.fromEntries(
-      course.levels.map((l) => [l.id, { reflection: 'итог', reflectionUpdatedAt: null, completedAt: T0.toISOString() }]),
+      course.levels.map((l) => [
+        l.id,
+        { reflection: 'итог', reflectionUpdatedAt: null, completedAt: T0.toISOString() },
+      ]),
     )
     const done = resumeInfo(course, { ...p, levels })
     expect(done.step.kind).toBe('graduation')
@@ -342,7 +361,10 @@ describe('страница фильма', () => {
 })
 
 describe('выпускная работа', () => {
-  const decision = (i: number) => ({ observation: `Решение ${i}: камера держит героя у края кадра`, effect: 'Ощущение, что ему нет места' })
+  const decision = (i: number) => ({
+    observation: `Решение ${i}: камера держит героя у края кадра`,
+    effect: 'Ощущение, что ему нет места',
+  })
 
   it('статус: не начата → в процессе → завершена; завершить можно только по критериям', () => {
     let p = createInitialProgress(T0)
@@ -351,7 +373,14 @@ describe('выпускная работа', () => {
     expect(graduationStatus(p)).toBe('in-progress')
 
     expect(completeGraduation(p, T0)).toBe(p)
-    p = updateGraduation(p, { subject: 'Фильм уровня 13, три сцены: начало, середина, финал', mainQuestion: 'Почему герой одинок среди людей?' }, T0)
+    p = updateGraduation(
+      p,
+      {
+        subject: 'Фильм уровня 13, три сцены: начало, середина, финал',
+        mainQuestion: 'Почему герой одинок среди людей?',
+      },
+      T0,
+    )
     for (const i of [0, 1, 2]) p = setGraduationDecision(p, i, decision(i), T0)
     p = updateGraduation(p, { connections: LONG + LONG, interpretation: LONG + LONG + LONG + LONG }, T0)
     expect(graduationCriteria(p).every((c) => c.met)).toBe(true)

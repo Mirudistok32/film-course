@@ -2,7 +2,7 @@
 
 Сайт курса визуального мышления: 13 уровней, 100 фильмов (из них 8 аниме), уроки «до / во время / после просмотра», журнал наблюдений, словарь, ранги и достижения, выпускная работа. Без сервера и аккаунтов: прогресс хранится в браузере, переносится JSON-файлом.
 
-Требования — [docs/film-course-spec.md](docs/film-course-spec.md), принятые решения и отступления от ТЗ — [docs/decisions.md](docs/decisions.md).
+Требования — [docs/spec.md](docs/spec.md), принятые решения и отступления от ТЗ — [docs/decisions.md](docs/decisions.md).
 
 ## Как открыть
 
@@ -32,7 +32,10 @@ Workflow [.github/workflows/pages.yml](.github/workflows/pages.yml) на каж�
 | `npm test` | Юнит-тесты Vitest (`tests/unit/`) |
 | `npm run test:e2e` | Сборка и сценарии Playwright (`e2e/`) по `file://` в установленном Chrome: ноутбук и телефон 390 px |
 | `npm run shots` | Скриншоты всех страниц и состояний в `.screenshots/` (светлая тема 1280 px и тёмная 390 px), заодно проверка ошибок консоли и горизонтальной прокрутки. `npm run shots -- film` — только снимки с `film` в имени |
-| `npm run check` | Типы, линтер, тесты и сборка разом |
+| `npm run format` | Prettier: привести код к стилю проекта (`format:check` — только проверить) |
+| `npm run contrast` | Таблица контраста «текст/фон» по токенам обеих тем (WCAG AA) |
+| `npm run check` | Быстрый гейт: типы, линтер, формат и юнит-тесты, без сборки |
+| `npm run check:full` | `check` + `test:e2e` (он собирает `dist/`) — гейт пункта плана |
 
 ## Стек
 
@@ -40,9 +43,9 @@ Vue 3, TypeScript, Vue Router (hash-режим), Pinia, Vite. Тесты — Vit
 
 ## Документация
 
-- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — слои, данные, стили, сборка.
-- [docs/SAVE_FORMAT.md](docs/SAVE_FORMAT.md) — формат сохранения и JSON-копии, миграции, импорт.
-- [docs/film-course-spec.md](docs/film-course-spec.md) — техническое задание.
+- [docs/architecture.md](docs/architecture.md) — слои, данные, стили, сборка.
+- [docs/save-format.md](docs/save-format.md) — формат сохранения и JSON-копии, миграции, импорт.
+- [docs/spec.md](docs/spec.md) — техническое задание.
 
 ## Ограничения
 

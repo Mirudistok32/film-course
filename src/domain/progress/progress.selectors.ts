@@ -280,10 +280,7 @@ export function courseMap(course: Course, p: UserProgress): LevelMapEntry[] {
 }
 
 export type LevelContinue =
-  | { kind: 'film'; film: Film }
-  | { kind: 'complete' }
-  | { kind: 'next-level'; level: Level }
-  | { kind: 'graduation' }
+  { kind: 'film'; film: Film } | { kind: 'complete' } | { kind: 'next-level'; level: Level } | { kind: 'graduation' }
 
 /**
  * Кнопка продолжения на странице уровня (ТЗ §11 п. 8): первый незавершённый
@@ -386,7 +383,11 @@ export function graduationCriteria(p: UserProgress): Criterion[] {
       detail: `сейчас ${filledDecisions.length}`,
     },
     { id: 'connections', label: 'Объяснено, как решения связаны между собой', met: isMeaningful(g.connections, 40) },
-    { id: 'interpretation', label: 'Итоговая интерпретация опирается на решения', met: isMeaningful(g.interpretation, 80) },
+    {
+      id: 'interpretation',
+      label: 'Итоговая интерпретация опирается на решения',
+      met: isMeaningful(g.interpretation, 80),
+    },
   ]
 }
 
@@ -401,7 +402,13 @@ export const GRADUATION_STATUS_LABEL: Record<GraduationStatus, string> = {
 export function graduationStatus(p: UserProgress): GraduationStatus {
   const g = p.graduation
   if (g.completedAt) return 'completed'
-  const texts = [g.subject, g.mainQuestion, g.connections, g.interpretation, ...g.decisions.flatMap((d) => [d.observation, d.effect])]
+  const texts = [
+    g.subject,
+    g.mainQuestion,
+    g.connections,
+    g.interpretation,
+    ...g.decisions.flatMap((d) => [d.observation, d.effect]),
+  ]
   return texts.some((t) => isMeaningful(t, 1)) ? 'in-progress' : 'not-started'
 }
 

@@ -118,8 +118,8 @@ watch(
         <p class="eyebrow">{{ total }} {{ termsWord(total) }} · {{ GLOSSARY_GROUPS.length }} тем</p>
         <h1>Словарь</h1>
         <p class="glossary__lead">
-          Слова, которыми удобно называть увиденное. У каждого термина — простое объяснение, точное значение,
-          вопрос, с которым его легче заметить, и уроки, где он пригодится.
+          Слова, которыми удобно называть увиденное. У каждого термина — простое объяснение, точное значение, вопрос, с
+          которым его легче заметить, и уроки, где он пригодится.
         </p>
       </div>
       <InkVignette name="reel" class="glossary__art" />
@@ -152,7 +152,13 @@ watch(
       </ul>
     </nav>
 
-    <section v-for="s in sections" :key="s.id" class="group" :data-tint="tintOf(s.id)" :aria-labelledby="`group-${s.id}`">
+    <section
+      v-for="s in sections"
+      :key="s.id"
+      class="group"
+      :data-tint="tintOf(s.id)"
+      :aria-labelledby="`group-${s.id}`"
+    >
       <InkDivider />
       <h2 :id="`group-${s.id}`" class="group__title" tabindex="-1">{{ s.title }}</h2>
       <ul class="group__list">
@@ -187,7 +193,12 @@ watch(
                   </RouterLink>
                 </dt>
                 <dd>
-                  <DisclosurePanel v-if="t.example.spoiler" summary="Пример касается финала" spoiler class="entry__spoiler">
+                  <DisclosurePanel
+                    v-if="t.example.spoiler"
+                    summary="Пример касается финала"
+                    spoiler
+                    class="entry__spoiler"
+                  >
                     <p>{{ t.example.text }}</p>
                   </DisclosurePanel>
                   <template v-else>{{ t.example.text }}</template>
@@ -350,7 +361,11 @@ watch(
   border: 1px solid color-mix(in srgb, var(--tint-ink) 18%, var(--line));
   border-top: 4px solid color-mix(in srgb, var(--tint-ink) 45%, var(--tint));
   border-radius: var(--radius-m);
-  background: linear-gradient(180deg, color-mix(in srgb, var(--tint) 70%, var(--paper-raised)), var(--paper-raised) 9rem);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--tint) 70%, var(--paper-raised)),
+    var(--paper-raised) 9rem
+  );
   box-shadow: var(--edge), var(--shadow);
   scroll-margin-top: 1rem;
 }

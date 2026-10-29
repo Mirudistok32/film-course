@@ -111,7 +111,9 @@ const sampleSummary = (s: SampleAnalysis) =>
       </label>
     </fieldset>
 
-    <p v-if="exercise.advanced" class="exercise__advanced"><strong>Если хочется пойти дальше:</strong> {{ exercise.advanced }}</p>
+    <p v-if="exercise.advanced" class="exercise__advanced">
+      <strong>Если хочется пойти дальше:</strong> {{ exercise.advanced }}
+    </p>
 
     <div v-if="completedAt" class="exercise__done">
       <HankoStamp class="exercise__stamp" text="выполнено" :tilt="-4" :press="pressed" aria-hidden="true" />
@@ -123,7 +125,9 @@ const sampleSummary = (s: SampleAnalysis) =>
       </AppButton>
       <p id="exercise-hint" class="exercise__hint">
         <template v-if="canComplete">
-          Ответ записан.<template v-if="store.settings.showGamification"> За упражнение — {{ XP_RULES.exerciseCompleted }} XP.</template>
+          Ответ записан.<template v-if="store.settings.showGamification">
+            За упражнение — {{ XP_RULES.exerciseCompleted }} XP.</template
+          >
         </template>
         <template v-else>Кнопка станет доступна, когда в ответе будет хотя бы одна-две фразы.</template>
       </p>

@@ -84,7 +84,13 @@ const scene = computed(() => {
 </script>
 
 <template>
-  <svg class="hero-scene" :viewBox="`0 0 ${W} ${H}`" aria-hidden="true" focusable="false" preserveAspectRatio="xMidYMid meet">
+  <svg
+    class="hero-scene"
+    :viewBox="`0 0 ${W} ${H}`"
+    aria-hidden="true"
+    focusable="false"
+    preserveAspectRatio="xMidYMid meet"
+  >
     <defs>
       <linearGradient :id="`${uid}-sky`" x1="0" y1="0" x2="0" y2="1">
         <stop offset="0" stop-color="var(--hero-sky-top)" />
@@ -124,9 +130,18 @@ const scene = computed(() => {
       </g>
 
       <g fill="var(--hero-cloud)">
-        <path class="layer cloud cloud--low" d="M600 262 Q660 244 730 254 Q800 236 880 250 Q960 238 1050 256 Q990 274 900 268 Q820 280 730 272 Q660 280 600 262 Z" />
-        <path class="layer cloud cloud--left" d="M60 146 Q120 132 190 140 Q250 128 330 142 Q280 156 200 152 Q130 160 60 146 Z" />
-        <path class="layer cloud cloud--right" d="M940 118 Q990 108 1040 114 Q1090 106 1150 118 Q1100 130 1040 126 Q990 132 940 118 Z" />
+        <path
+          class="layer cloud cloud--low"
+          d="M600 262 Q660 244 730 254 Q800 236 880 250 Q960 238 1050 256 Q990 274 900 268 Q820 280 730 272 Q660 280 600 262 Z"
+        />
+        <path
+          class="layer cloud cloud--left"
+          d="M60 146 Q120 132 190 140 Q250 128 330 142 Q280 156 200 152 Q130 160 60 146 Z"
+        />
+        <path
+          class="layer cloud cloud--right"
+          d="M940 118 Q990 108 1040 114 Q1090 106 1150 118 Q1100 130 1040 126 Q990 132 940 118 Z"
+        />
       </g>
 
       <g class="layer birds" fill="none" stroke="var(--hero-ink)" stroke-width="2" stroke-linecap="round" opacity="0.7">
@@ -146,8 +161,20 @@ const scene = computed(() => {
         <path v-for="(d, i) in scene.tree.limbs" :key="`l${i}`" :d="d" />
       </g>
       <!-- Побеги и дупла — линии, их можно слить в один path: пышная крона не раздувает DOM. -->
-      <path :d="scene.tree.twigs.join('')" fill="none" stroke="var(--hero-ink)" stroke-width="1.6" stroke-linecap="round" />
-      <path :d="scene.tree.knots.join('')" fill="none" stroke="var(--hero-sky-bottom)" stroke-width="1.4" opacity="0.35" />
+      <path
+        :d="scene.tree.twigs.join('')"
+        fill="none"
+        stroke="var(--hero-ink)"
+        stroke-width="1.6"
+        stroke-linecap="round"
+      />
+      <path
+        :d="scene.tree.knots.join('')"
+        fill="none"
+        stroke="var(--hero-sky-bottom)"
+        stroke-width="1.4"
+        opacity="0.35"
+      />
 
       <!-- Зритель в капюшоне сидит среди корней, прислонившись спиной к стволу, и смотрит на луну.
            Лунный контур с лицевой стороны отделяет фигуру от ствола того же цвета. -->

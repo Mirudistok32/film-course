@@ -5,7 +5,13 @@ withDefaults(defineProps<{ caption?: string }>(), { caption: '' })
 
 <template>
   <figure class="intertitle">
-    <svg class="intertitle__corners" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+    <svg
+      class="intertitle__corners"
+      viewBox="0 0 100 100"
+      preserveAspectRatio="none"
+      aria-hidden="true"
+      focusable="false"
+    >
       <path d="M2 14V2H14M86 2H98V14M98 86V98H86M14 98H2V86" vector-effect="non-scaling-stroke" />
     </svg>
     <blockquote class="intertitle__text">

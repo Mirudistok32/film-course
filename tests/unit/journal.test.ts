@@ -29,7 +29,9 @@ describe('журнал', () => {
     const entries = journalEntries(course, sample())
     expect(entries.map((e) => e.id)).toEqual([`analysis-${film3.id}`, 'n-film2', 'n-free', `analysis-${film1!.id}`])
     const analysis = entries[0]!
-    expect(analysis.type === 'analysis' && analysis.parts).toEqual([{ key: 'exercise', text: 'Ёлки в кадре как рамка' }])
+    expect(analysis.type === 'analysis' && analysis.parts).toEqual([
+      { key: 'exercise', text: 'Ёлки в кадре как рамка' },
+    ])
   })
 
   it('фильм без ответов не даёт пустого разбора', () => {

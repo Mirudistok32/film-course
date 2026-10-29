@@ -58,11 +58,15 @@ async function selectTab(t: Tab, focusTab = false) {
 function onTabKey(event: KeyboardEvent, index: number) {
   const last = TABS.length - 1
   const target =
-    event.key === 'ArrowRight' ? (index + 1) % (last + 1)
-    : event.key === 'ArrowLeft' ? (index + last) % (last + 1)
-    : event.key === 'Home' ? 0
-    : event.key === 'End' ? last
-    : -1
+    event.key === 'ArrowRight'
+      ? (index + 1) % (last + 1)
+      : event.key === 'ArrowLeft'
+        ? (index + last) % (last + 1)
+        : event.key === 'Home'
+          ? 0
+          : event.key === 'End'
+            ? last
+            : -1
   const t = TABS[target]
   if (!t) return
   event.preventDefault()
@@ -115,7 +119,12 @@ function resetFilters() {
 
 const all = computed(() => journalEntries(course.value, store.progress))
 const shown = computed(() =>
-  filterJournal(all.value, { levelId: levelId.value || null, filmId: filmId.value, type: type.value, query: query.value }),
+  filterJournal(all.value, {
+    levelId: levelId.value || null,
+    filmId: filmId.value,
+    type: type.value,
+    query: query.value,
+  }),
 )
 
 const summary = computed(() =>
@@ -167,8 +176,8 @@ function confirmDelete() {
       </p>
       <h1>Журнал</h1>
       <p class="journal__lead">
-        Все ваши заметки и разборы фильмов в одном месте. Возвращайтесь к ним: через неделю в старой записи
-        часто видно то, чего не было видно сразу.
+        Все ваши заметки и разборы фильмов в одном месте. Возвращайтесь к ним: через неделю в старой записи часто видно
+        то, чего не было видно сразу.
       </p>
     </header>
 
@@ -234,12 +243,14 @@ function confirmDelete() {
 
         <ul v-if="shown.length" class="list">
           <li v-for="entry in shown" :key="entry.id">
-            <JournalEntryCard :entry="entry" @delete="pending = $event" @saved="message = `Заметка «${$event}» сохранена.`" />
+            <JournalEntryCard
+              :entry="entry"
+              @delete="pending = $event"
+              @saved="message = `Заметка «${$event}» сохранена.`"
+            />
           </li>
         </ul>
-        <p v-else class="journal__empty">
-          Под эти условия записей нет. Попробуйте другое слово или сбросьте фильтры.
-        </p>
+        <p v-else class="journal__empty">Под эти условия записей нет. Попробуйте другое слово или сбросьте фильтры.</p>
       </template>
 
       <div v-else class="empty">

@@ -90,7 +90,8 @@ const v1ToV2: Migration = {
     }
   },
   finalize(progress, original, ctx) {
-    const legacyXp = typeof original.xp === 'number' && Number.isFinite(original.xp) ? Math.max(0, Math.round(original.xp)) : 0
+    const legacyXp =
+      typeof original.xp === 'number' && Number.isFinite(original.xp) ? Math.max(0, Math.round(original.xp)) : 0
     const ledger = eligibleXpEvents(ctx.course, progress).map((e) => ({ ...e, at: ctx.sourceDate }))
     const derived = sumXp(ledger)
     if (legacyXp > derived) ledger.push({ id: LEGACY_V1_XP_EVENT, amount: legacyXp - derived, at: ctx.sourceDate })

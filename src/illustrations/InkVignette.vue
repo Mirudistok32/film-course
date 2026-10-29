@@ -12,7 +12,9 @@ const props = defineProps<{ name: VignetteName }>()
 
 /** Маленькое дерево рядом со столбом — тот же генератор, что и в заставке. */
 const tree = computed(() =>
-  props.name === 'signpost' ? drawTree({ seed: 'lost-tree', x: 34, y: 92, height: 70, depth: 5, lean: -0.15, roots: false }) : null,
+  props.name === 'signpost'
+    ? drawTree({ seed: 'lost-tree', x: 34, y: 92, height: 70, depth: 5, lean: -0.15, roots: false })
+    : null,
 )
 </script>
 

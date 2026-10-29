@@ -212,7 +212,12 @@ hr {
 .card[data-tint] {
   border-color: color-mix(in srgb, var(--tint-ink) 22%, var(--line));
   border-top: 4px solid color-mix(in srgb, var(--tint-ink) 45%, var(--tint));
-  background: linear-gradient(180deg, var(--tint) 0, color-mix(in srgb, var(--tint) 35%, var(--paper-raised)) 7rem, var(--paper-raised) 16rem);
+  background: linear-gradient(
+    180deg,
+    var(--tint) 0,
+    color-mix(in srgb, var(--tint) 35%, var(--paper-raised)) 7rem,
+    var(--paper-raised) 16rem
+  );
 }
 
 /* ---------- Уменьшение движения: системное и пользовательское ---------- */

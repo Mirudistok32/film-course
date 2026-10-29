@@ -74,7 +74,8 @@ function save(value: { text: string; kind: NoteKind; filmId: string | null }) {
         <p class="entry__meta">
           <template v-if="film">Уровень {{ film.levelNumber }} · {{ film.year }} · </template>
           <template v-if="note">
-            {{ formatDateTime(note.createdAt) }}<template v-if="edited">, изменена {{ formatDateTime(note.updatedAt) }}</template>
+            {{ formatDateTime(note.createdAt)
+            }}<template v-if="edited">, изменена {{ formatDateTime(note.updatedAt) }}</template>
           </template>
           <template v-else>обновлён {{ formatDateTime(entry.date) }}</template>
         </p>
@@ -134,7 +135,11 @@ function save(value: { text: string; kind: NoteKind; filmId: string | null }) {
   padding: 1rem 1.1rem 0.5rem;
   border-left: 4px solid color-mix(in srgb, var(--tint-ink) 55%, var(--tint));
   border-radius: 0 var(--radius-m) var(--radius-m) 0;
-  background: linear-gradient(100deg, color-mix(in srgb, var(--tint) 60%, var(--paper-raised)), var(--paper-raised) 45%);
+  background: linear-gradient(
+    100deg,
+    color-mix(in srgb, var(--tint) 60%, var(--paper-raised)),
+    var(--paper-raised) 45%
+  );
   box-shadow: var(--edge), var(--shadow);
   min-width: 0;
 }

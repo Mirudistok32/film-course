@@ -117,7 +117,8 @@ function finish() {
   }
 }
 
-const DECISION_KINDS = 'кадр и композиция, монтаж, движение камеры, свет и цвет, звук или тишина, пространство, жест и тело, время'
+const DECISION_KINDS =
+  'кадр и композиция, монтаж, движение камеры, свет и цвет, звук или тишина, пространство, жест и тело, время'
 
 const decisionLabel = (i: number) => `Решение ${i + 1}${i < GRADUATION_MIN_DECISIONS ? '' : ' (дополнительное)'}`
 const filled = (d: GraduationWork['decisions'][number]) => isMeaningful(d.observation, 10) && isMeaningful(d.effect, 10)
@@ -130,7 +131,9 @@ const filled = (d: GraduationWork['decisions'][number]) => isMeaningful(d.observ
         <RouterLink :to="{ name: 'course' }">Карта курса</RouterLink>
         <template v-if="lastLevel">
           <span aria-hidden="true"> · </span>
-          <RouterLink :to="{ name: 'level', params: { levelId: lastLevel.id } }">Уровень {{ lastLevel.number }}</RouterLink>
+          <RouterLink :to="{ name: 'level', params: { levelId: lastLevel.id } }"
+            >Уровень {{ lastLevel.number }}</RouterLink
+          >
         </template>
       </p>
       <p class="eyebrow">Финал курса</p>
@@ -139,12 +142,14 @@ const filled = (d: GraduationWork['decisions'][number]) => isMeaningful(d.observ
         Самостоятельный формальный анализ фильма или двух-трёх его сцен. Здесь нет правильного ответа: важно, чтобы
         интерпретация вырастала из того, что видно и слышно на экране, а не из пересказа сюжета.
       </p>
-      <p class="grad__status">Статус: <strong>{{ GRADUATION_STATUS_LABEL[status] }}</strong></p>
+      <p class="grad__status">
+        Статус: <strong>{{ GRADUATION_STATUS_LABEL[status] }}</strong>
+      </p>
     </header>
 
     <p v-if="locked && lastLevel" class="grad__locked" role="note">
-      Включён строгий порядок: работа откроется для записи, когда будет пройден уровень {{ lastLevel.number - 1 }}.
-      Пока её можно прочитать и продумать.
+      Включён строгий порядок: работа откроется для записи, когда будет пройден уровень {{ lastLevel.number - 1 }}. Пока
+      её можно прочитать и продумать.
       <RouterLink :to="{ name: 'data' }">Изменить в настройках</RouterLink>
     </p>
 
@@ -157,7 +162,8 @@ const filled = (d: GraduationWork['decisions'][number]) => isMeaningful(d.observ
           <p class="criteria-card__note">
             Объём не важен — важна опора на конкретные кадры и звуки.<template v-if="store.settings.showGamification">
               За завершение — {{ XP_RULES.graduationCompleted }} XP и достижения «Аргумент, а не впечатление»,
-              «Собственная мысль».</template>
+              «Собственная мысль».</template
+            >
           </p>
         </div>
       </aside>
@@ -207,7 +213,10 @@ const filled = (d: GraduationWork['decisions'][number]) => isMeaningful(d.observ
             именно сделано и какой эффект это производит на зрителя.
           </p>
           <DisclosurePanel summary="Как может выглядеть одно решение">
-            <p><strong>Что сделано:</strong> в сценах в доме героиню снимают через дверные проёмы, всегда на дальнем плане.</p>
+            <p>
+              <strong>Что сделано:</strong> в сценах в доме героиню снимают через дверные проёмы, всегда на дальнем
+              плане.
+            </p>
             <p><strong>Эффект:</strong> кажется, что мы подглядываем, а она заперта в собственном доме.</p>
             <p class="muted">Пример формы ответа — не про конкретный фильм.</p>
           </DisclosurePanel>
@@ -272,7 +281,11 @@ const filled = (d: GraduationWork['decisions'][number]) => isMeaningful(d.observ
         <section class="card finish" data-tint="mint" aria-labelledby="finish-title">
           <h2 id="finish-title">Завершение</h2>
           <div v-if="g.completedAt" class="finish__done">
-            <HankoStamp class="finish__stamp" text="работа завершена" :center="lastLevel ? String(lastLevel.number) : '✓'" />
+            <HankoStamp
+              class="finish__stamp"
+              text="работа завершена"
+              :center="lastLevel ? String(lastLevel.number) : '✓'"
+            />
             <p>
               <strong>Выпускная работа завершена</strong> ({{ formatDate(g.completedAt) }}). Завершение не отменяется:
               текст можно дополнять и переписывать.

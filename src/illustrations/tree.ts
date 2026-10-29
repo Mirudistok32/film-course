@@ -50,7 +50,10 @@ function limbPath(a: Point, c: Point, b: Point, w0: number, w1: number): string 
   const n1 = norm(b[0] - c[0], b[1] - c[1])
   const nc = norm(b[0] - a[0], b[1] - a[1])
   const wm = (w0 + w1) / 2
-  const side = (p: Point, n: Point, w: number, s: 1 | -1): Point => [p[0] + (s * n[0] * w) / 2, p[1] + (s * n[1] * w) / 2]
+  const side = (p: Point, n: Point, w: number, s: 1 | -1): Point => [
+    p[0] + (s * n[0] * w) / 2,
+    p[1] + (s * n[1] * w) / 2,
+  ]
   const l0 = side(a, n0, w0, 1)
   const lc = side(c, nc, wm, 1)
   const l1 = side(b, n1, w1, 1)
@@ -90,7 +93,15 @@ export function drawTree(options: TreeOptions): TreeDrawing {
     out.twigs.push(`M${pt(from)}Q${pt(c)} ${pt(end)}`)
   }
 
-  function grow(from: Point, angle: number, length: number, width: number, level: number, twist: number, isTrunk: boolean) {
+  function grow(
+    from: Point,
+    angle: number,
+    length: number,
+    width: number,
+    level: number,
+    twist: number,
+    isTrunk: boolean,
+  ) {
     const bend = (rng.next() - 0.5) * length * gnarl * 0.9 + twist * length * 0.18
     const end: Point = [from[0] + Math.cos(angle) * length, from[1] + Math.sin(angle) * length]
     const n = norm(end[0] - from[0], end[1] - from[1])
@@ -193,7 +204,10 @@ export function drawTree(options: TreeOptions): TreeDrawing {
         ]
         const subAngle = angle + s * rng.range(0.3, 0.6)
         const subLength = length * rng.range(0.3, 0.5)
-        const subEnd: Point = [from[0] + Math.cos(subAngle) * subLength, from[1] + Math.sin(subAngle) * subLength * 0.5 + 2]
+        const subEnd: Point = [
+          from[0] + Math.cos(subAngle) * subLength,
+          from[1] + Math.sin(subAngle) * subLength * 0.5 + 2,
+        ]
         const subMid: Point = [(from[0] + subEnd[0]) / 2, (from[1] + subEnd[1]) / 2 - subLength * 0.06]
         out.limbs.push(limbPath(from, subMid, subEnd, kneeWidth * (1 - t) * 0.75, 0.5))
       }

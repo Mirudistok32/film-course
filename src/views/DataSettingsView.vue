@@ -15,7 +15,12 @@ import { parseImportFile, summarizeProgress, type ProgressSummary } from '@/doma
 import { mergeReportLines } from '@/domain/progress/progress.merge'
 import { backupReminder } from '@/domain/progress/progress.selectors'
 import { STORAGE_KEY } from '@/domain/progress/progress.storage'
-import { CURRENT_SCHEMA_VERSION, PROGRESS_FORMAT, type Settings, type UserProgress } from '@/domain/progress/progress.types'
+import {
+  CURRENT_SCHEMA_VERSION,
+  PROGRESS_FORMAT,
+  type Settings,
+  type UserProgress,
+} from '@/domain/progress/progress.types'
 import type { DocumentError, DocumentInfo } from '@/domain/progress/progress.document'
 import { formatDateTime } from '@/domain/shared/dates'
 import { plural } from '@/domain/shared/text'
@@ -58,7 +63,8 @@ const message = ref('')
 /* ---------- Резервная копия ---------- */
 
 function exportNow() {
-  if (store.exportBackup()) message.value = `Копия скачана: ${exportFileName(store.now())}. Храните её отдельно от браузера.`
+  if (store.exportBackup())
+    message.value = `Копия скачана: ${exportFileName(store.now())}. Храните её отдельно от браузера.`
   else store.notify('error', 'Не удалось скачать копию', 'Браузер запретил скачивание файла.')
 }
 
@@ -133,7 +139,10 @@ function merge() {
   void showImport({
     kind: 'done',
     title: 'Прогресс объединён',
-    lines: [...(lines.length ? lines : ['Нового в файле не нашлось — всё это уже было в браузере.']), ...savedNote(saved)],
+    lines: [
+      ...(lines.length ? lines : ['Нового в файле не нашлось — всё это уже было в браузере.']),
+      ...savedNote(saved),
+    ],
     saved,
   })
 }
@@ -242,8 +251,8 @@ const TEXT_SCALES = [
       <p class="eyebrow">Резервная копия · импорт · настройки</p>
       <h1>Данные и настройки</h1>
       <p class="data__lead">
-        У сайта нет сервера и аккаунтов: прогресс хранится только в этом браузере на этом устройстве. Он не появится
-        сам на другом компьютере и пропадёт, если очистить данные сайта. Чтобы перенести прогресс или подстраховаться,
+        У сайта нет сервера и аккаунтов: прогресс хранится только в этом браузере на этом устройстве. Он не появится сам
+        на другом компьютере и пропадёт, если очистить данные сайта. Чтобы перенести прогресс или подстраховаться,
         скачайте резервную копию — обычный JSON-файл.
       </p>
     </header>
@@ -273,8 +282,8 @@ const TEXT_SCALES = [
             <div>
               <dt>Сейчас в браузере</dt>
               <dd>
-                {{ current.filmsWithProgress }} {{ films(current.filmsWithProgress) }} с прогрессом,
-                {{ current.notes }} {{ notes(current.notes) }}
+                {{ current.filmsWithProgress }} {{ films(current.filmsWithProgress) }} с прогрессом, {{ current.notes }}
+                {{ notes(current.notes) }}
               </dd>
             </div>
           </dl>
@@ -336,9 +345,10 @@ const TEXT_SCALES = [
         <template v-else-if="importView.kind === 'preview'">
           <h3 id="import-title" ref="importTitle" tabindex="-1">Что в файле «{{ importView.name }}»</h3>
           <p class="import__meta">
-            Копия от {{ importView.info.exportedAt ? formatDateTime(importView.info.exportedAt) : 'неизвестной даты' }}
-            · формат версии {{ importView.info.schemaVersion }}<template v-if="importView.info.appVersion">
-              · сайт {{ importView.info.appVersion }}</template>
+            Копия от
+            {{ importView.info.exportedAt ? formatDateTime(importView.info.exportedAt) : 'неизвестной даты' }} · формат
+            версии {{ importView.info.schemaVersion
+            }}<template v-if="importView.info.appVersion"> · сайт {{ importView.info.appVersion }}</template>
           </p>
           <p v-if="importView.migratedFrom !== null" class="import__note">
             Файл старого формата — при загрузке он обновится до версии {{ CURRENT_SCHEMA_VERSION }}, данные не теряются.
@@ -470,8 +480,8 @@ const TEXT_SCALES = [
       </template>
       <template v-else>
         <p>
-          Удаляет из браузера статусы фильмов, ответы, заметки, мотивы, выпускную работу, опыт и достижения.
-          Настройки остаются. Перед сбросом лучше скачать резервную копию.
+          Удаляет из браузера статусы фильмов, ответы, заметки, мотивы, выпускную работу, опыт и достижения. Настройки
+          остаются. Перед сбросом лучше скачать резервную копию.
         </p>
         <div class="reset__actions">
           <AppButton variant="danger" :disabled="!store.started" @click="askReset">Сбросить прогресс</AppButton>
@@ -485,15 +495,18 @@ const TEXT_SCALES = [
 
     <DisclosurePanel summary="О формате файла" class="about">
       <p>
-        Резервная копия — JSON с полями <code>format</code> («{{ PROGRESS_FORMAT }}»), <code>schemaVersion</code>
-        (сейчас {{ CURRENT_SCHEMA_VERSION }}), <code>exportedAt</code>, <code>appVersion</code> и
-        <code>progress</code>. Даты хранятся в ISO 8601 (UTC), учебные дни — как локальные даты ГГГГ-ММ-ДД.
+        Резервная копия — JSON с полями <code>format</code> («{{ PROGRESS_FORMAT }}»),
+        <code>schemaVersion</code> (сейчас {{ CURRENT_SCHEMA_VERSION }}), <code>exportedAt</code>,
+        <code>appVersion</code> и <code>progress</code>. Даты хранятся в ISO 8601 (UTC), учебные дни — как локальные
+        даты ГГГГ-ММ-ДД.
       </p>
       <p>
         Файлы старых версий формата обновляются при импорте. Файл более новой версии сайта не импортируется — текущие
         данные при этом не меняются.
       </p>
-      <p class="muted">Версия сайта: {{ appVersion }} · ключ в хранилище браузера: <code>{{ STORAGE_KEY }}</code></p>
+      <p class="muted">
+        Версия сайта: {{ appVersion }} · ключ в хранилище браузера: <code>{{ STORAGE_KEY }}</code>
+      </p>
     </DisclosurePanel>
 
     <ConfirmDialog
@@ -540,7 +553,8 @@ const TEXT_SCALES = [
     >
       <p>
         Будут удалены {{ current.filmsWithProgress }} {{ films(current.filmsWithProgress) }} с прогрессом,
-        {{ current.notes }} {{ notes(current.notes) }}, ответы, выпускная работа, опыт и достижения. Настройки останутся.
+        {{ current.notes }} {{ notes(current.notes) }}, ответы, выпускная работа, опыт и достижения. Настройки
+        останутся.
       </p>
       <p>Скачайте резервную копию, чтобы при желании вернуть всё импортом.</p>
       <p class="dialog-export">

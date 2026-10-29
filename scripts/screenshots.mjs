@@ -44,8 +44,20 @@ const filmDone = (() => {
     exerciseCompleted: true,
     revisitLater: true,
     notes: [
-      { id: 'n1', kind: 'observation', text: 'Окна и двери — кривые треугольники, ни одной прямой линии.', createdAt: '2026-10-28T16:40:00.000Z', updatedAt: '2026-10-28T16:40:00.000Z' },
-      { id: 'n2', kind: 'question', text: 'Чьими глазами мы видим этот город?', createdAt: '2026-10-28T17:40:00.000Z', updatedAt: '2026-10-28T17:40:00.000Z' },
+      {
+        id: 'n1',
+        kind: 'observation',
+        text: 'Окна и двери — кривые треугольники, ни одной прямой линии.',
+        createdAt: '2026-10-28T16:40:00.000Z',
+        updatedAt: '2026-10-28T16:40:00.000Z',
+      },
+      {
+        id: 'n2',
+        kind: 'question',
+        text: 'Чьими глазами мы видим этот город?',
+        createdAt: '2026-10-28T17:40:00.000Z',
+        updatedAt: '2026-10-28T17:40:00.000Z',
+      },
     ],
   })
   return JSON.stringify(doc)
@@ -53,12 +65,45 @@ const filmDone = (() => {
 
 /** Журнал: заметки разных типов, свободная заметка, копия при объединении и мотив (поверх загруженной v2). */
 function journalData(p) {
-  const note = (id, kind, filmId, text, createdAt, updatedAt = createdAt) => ({ id, kind, filmId, text, createdAt, updatedAt, tags: [] })
+  const note = (id, kind, filmId, text, createdAt, updatedAt = createdAt) => ({
+    id,
+    kind,
+    filmId,
+    text,
+    createdAt,
+    updatedAt,
+    tags: [],
+  })
   p.notes = [
-    note('j1', 'observation', 'the-cabinet-of-dr-caligari', 'Окна и двери — кривые треугольники, ни одной прямой линии.', '2026-10-27T16:40:00.000Z'),
-    note('j2', 'free', null, 'Я заметил: в двух фильмах подряд герой смотрит в окно перед решением.\nЭто заставило почувствовать: паузу, вдох перед шагом.\nВозможно, это означает: окно — граница между «думать» и «делать».\nНа это указывает: после окна монтаж всякий раз ускоряется.', '2026-10-28T09:10:00.000Z', '2026-10-28T11:00:00.000Z'),
-    note('j3', 'question', 'nosferatu', 'Почему тень поднимается по лестнице раньше, чем мы видим самого героя?', '2026-10-28T12:20:00.000Z'),
-    note('j4', 'merge-copy', 'nosferatu', 'Тень на лестнице — страх, который приходит раньше угрозы.', '2026-10-28T12:30:00.000Z'),
+    note(
+      'j1',
+      'observation',
+      'the-cabinet-of-dr-caligari',
+      'Окна и двери — кривые треугольники, ни одной прямой линии.',
+      '2026-10-27T16:40:00.000Z',
+    ),
+    note(
+      'j2',
+      'free',
+      null,
+      'Я заметил: в двух фильмах подряд герой смотрит в окно перед решением.\nЭто заставило почувствовать: паузу, вдох перед шагом.\nВозможно, это означает: окно — граница между «думать» и «делать».\nНа это указывает: после окна монтаж всякий раз ускоряется.',
+      '2026-10-28T09:10:00.000Z',
+      '2026-10-28T11:00:00.000Z',
+    ),
+    note(
+      'j3',
+      'question',
+      'nosferatu',
+      'Почему тень поднимается по лестнице раньше, чем мы видим самого героя?',
+      '2026-10-28T12:20:00.000Z',
+    ),
+    note(
+      'j4',
+      'merge-copy',
+      'nosferatu',
+      'Тень на лестнице — страх, который приходит раньше угрозы.',
+      '2026-10-28T12:30:00.000Z',
+    ),
   ]
   p.motifs = [
     {
@@ -87,13 +132,27 @@ function graduationData(p) {
     filmId: 'the-cabinet-of-dr-caligari',
     mainQuestion: 'Почему героиня кажется одинокой даже среди людей?',
     decisions: [
-      { observation: 'Её снимают через дверные проёмы, всегда на дальнем плане.', effect: 'Кажется, что мы подглядываем, а она заперта.' },
-      { observation: 'На празднике музыка звучит из-за стены, а не в комнате.', effect: 'Веселье слышно, но оно чужое и далёкое.' },
-      { observation: 'Ночная сцена идёт одним долгим планом без склеек.', effect: 'Время тянется, выхода из него нет.' },
-      { observation: 'В финале впервые крупный план лица.', effect: 'Дистанция исчезает внезапно, становится неловко.' },
+      {
+        observation: 'Её снимают через дверные проёмы, всегда на дальнем плане.',
+        effect: 'Кажется, что мы подглядываем, а она заперта.',
+      },
+      {
+        observation: 'На празднике музыка звучит из-за стены, а не в комнате.',
+        effect: 'Веселье слышно, но оно чужое и далёкое.',
+      },
+      {
+        observation: 'Ночная сцена идёт одним долгим планом без склеек.',
+        effect: 'Время тянется, выхода из него нет.',
+      },
+      {
+        observation: 'В финале впервые крупный план лица.',
+        effect: 'Дистанция исчезает внезапно, становится неловко.',
+      },
     ],
-    connections: 'Рамки дверей, звук из-за стены и долгий план работают на одно: дистанцию между героиней и миром, которую фильм снимает только в финале.',
-    interpretation: 'Одиночество здесь — не настроение, а устройство пространства и звука: фильм держит нас на расстоянии от героини так же, как её держат люди вокруг. Крупный план в финале ломает это правило — и поэтому ощущается как признание.',
+    connections:
+      'Рамки дверей, звук из-за стены и долгий план работают на одно: дистанцию между героиней и миром, которую фильм снимает только в финале.',
+    interpretation:
+      'Одиночество здесь — не настроение, а устройство пространства и звука: фильм держит нас на расстоянии от героини так же, как её держат люди вокруг. Крупный план в финале ломает это правило — и поэтому ощущается как признание.',
     completedAt: '2026-10-28T18:30:00.000Z',
     updatedAt: '2026-10-28T18:30:00.000Z',
   }
@@ -107,7 +166,11 @@ function homeStarted(p) {
 /** Главная: все уровни пройдены, осталась выпускная; игровые элементы скрыты. */
 function homeGraduation(p) {
   for (let i = 1; i <= 13; i++) {
-    p.levels[`level-${String(i).padStart(2, '0')}`] = { reflection: 'итог', reflectionUpdatedAt: null, completedAt: '2026-10-28T18:00:00.000Z' }
+    p.levels[`level-${String(i).padStart(2, '0')}`] = {
+      reflection: 'итог',
+      reflectionUpdatedAt: null,
+      completedAt: '2026-10-28T18:00:00.000Z',
+    }
   }
   p.settings.showGamification = false
 }
@@ -132,16 +195,42 @@ const PAGES = [
   { name: 'level-locked', hash: '#/course/level-03', raw: advanced },
   // Кольцо фокуса у кадров плёнки, ролика и карточек фильмов — цветом уровня.
   { name: 'course-focus', hash: '#/course', seed: true, focus: ['.frame__link', 1], viewportOnly: true },
-  { name: 'course-reel-focus', hash: '#/course', seed: true, focus: ['.reel__cell', 2], viewportOnly: true, mobileOnly: true },
+  {
+    name: 'course-reel-focus',
+    hash: '#/course',
+    seed: true,
+    focus: ['.reel__cell', 2],
+    viewportOnly: true,
+    mobileOnly: true,
+  },
   { name: 'level-focus', hash: '#/course/level-01', seed: true, focus: ['.film__link', 1], viewportOnly: true },
   { name: 'film', hash: '#/film/the-cabinet-of-dr-caligari', seed: true },
   { name: 'film-before', hash: '#/film/alexander-nevsky' },
   { name: 'film-during', hash: '#/film/alexander-nevsky?step=during' },
-  { name: 'film-watched', hash: '#/film/alexander-nevsky', click: ['Отметить просмотр'], viewportOnly: true, settle: 700 },
+  {
+    name: 'film-watched',
+    hash: '#/film/alexander-nevsky',
+    click: ['Отметить просмотр'],
+    viewportOnly: true,
+    settle: 700,
+  },
   { name: 'film-done', hash: '#/film/the-cabinet-of-dr-caligari', raw: filmDone, click: ['Посмотреть пример разбора'] },
   // Липкая полоса урока: переход к заметкам из полосы (снимок окна, после плавной прокрутки).
-  { name: 'film-stuck', hash: '#/film/the-cabinet-of-dr-caligari', raw: filmDone, click: ['Заметки'], viewportOnly: true, settle: 900 },
-  { name: 'film-dialog', hash: '#/film/the-cabinet-of-dr-caligari', raw: filmDone, click: ['Удалить'], mobileOnly: true },
+  {
+    name: 'film-stuck',
+    hash: '#/film/the-cabinet-of-dr-caligari',
+    raw: filmDone,
+    click: ['Заметки'],
+    viewportOnly: true,
+    settle: 900,
+  },
+  {
+    name: 'film-dialog',
+    hash: '#/film/the-cabinet-of-dr-caligari',
+    raw: filmDone,
+    click: ['Удалить'],
+    mobileOnly: true,
+  },
   { name: 'journal', hash: '#/journal', seed: true, mutate: journalData },
   { name: 'journal-empty', hash: '#/journal' },
   { name: 'journal-film', hash: '#/journal?film=nosferatu', seed: true, mutate: journalData },
@@ -153,12 +242,34 @@ const PAGES = [
   { name: 'glossary-level', hash: '#/glossary?level=level-03', click: ['Ещё'] },
   { name: 'achievements', hash: '#/achievements', seed: true },
   { name: 'achievements-rich', hash: '#/achievements', raw: filmDone, mutate: achievementsData },
-  { name: 'achievements-hidden', hash: '#/achievements', seed: true, mutate: (p) => (p.settings.showGamification = false) },
+  {
+    name: 'achievements-hidden',
+    hash: '#/achievements',
+    seed: true,
+    mutate: (p) => (p.settings.showGamification = false),
+  },
   { name: 'data', hash: '#/settings/data', seed: true },
   { name: 'data-empty', hash: '#/settings/data' },
-  { name: 'data-import', hash: '#/settings/data', seed: true, mutate: journalData, upload: { name: 'progress-v1.json', text: fixture } },
-  { name: 'data-import-error', hash: '#/settings/data', seed: true, upload: { name: 'notes.json', text: '{"format":"other-app","schemaVersion":1}' } },
-  { name: 'data-merged', hash: '#/settings/data', raw: filmDone, upload: { name: 'progress-v1.json', text: fixture }, click: ['Объединить с текущим'] },
+  {
+    name: 'data-import',
+    hash: '#/settings/data',
+    seed: true,
+    mutate: journalData,
+    upload: { name: 'progress-v1.json', text: fixture },
+  },
+  {
+    name: 'data-import-error',
+    hash: '#/settings/data',
+    seed: true,
+    upload: { name: 'notes.json', text: '{"format":"other-app","schemaVersion":1}' },
+  },
+  {
+    name: 'data-merged',
+    hash: '#/settings/data',
+    raw: filmDone,
+    upload: { name: 'progress-v1.json', text: fixture },
+    click: ['Объединить с текущим'],
+  },
   { name: 'data-reset', hash: '#/settings/data', seed: true, click: ['Сбросить прогресс'], mobileOnly: true },
   { name: 'data-corrupted', hash: '#/settings/data', raw: '{"format":"kino' },
   { name: 'graduation', hash: '#/graduation', seed: true },

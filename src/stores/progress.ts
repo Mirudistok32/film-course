@@ -92,7 +92,8 @@ export const useProgressStore = defineStore('progress', () => {
     for (const a of unlocked) notify('achievement', a.title, a.description)
     const prevRank = rankFor(before.xp).rank
     const nextRank = rankFor(after.xp).rank
-    if (nextRank.id !== prevRank.id) notify('rank', `Новый ранг: ${nextRank.title}`, 'Это метафора накопленного опыта, а не оценка.')
+    if (nextRank.id !== prevRank.id)
+      notify('rank', `Новый ранг: ${nextRank.title}`, 'Это метафора накопленного опыта, а не оценка.')
   }
 
   function writeNow(): boolean {
@@ -271,7 +272,11 @@ export const useProgressStore = defineStore('progress', () => {
     return { saved: writeNow(), unlocked: outcome.unlocked }
   }
 
-  function mergeWith(imported: UserProgress): { saved: boolean; report: MergeReport; unlocked: AchievementDefinition[] } {
+  function mergeWith(imported: UserProgress): {
+    saved: boolean
+    report: MergeReport
+    unlocked: AchievementDefinition[]
+  } {
     flush()
     snapshotCurrent('before-import')
     const now = clock()

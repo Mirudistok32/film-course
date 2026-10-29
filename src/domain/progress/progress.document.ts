@@ -78,7 +78,9 @@ export function readProgressDocument(data: unknown, course: Course): ReadDocumen
   if (data.format !== PROGRESS_FORMAT) {
     return {
       ok: false,
-      error: documentError('wrong-format', [`format: ожидалось «${PROGRESS_FORMAT}», в файле ${JSON.stringify(data.format ?? null)}`]),
+      error: documentError('wrong-format', [
+        `format: ожидалось «${PROGRESS_FORMAT}», в файле ${JSON.stringify(data.format ?? null)}`,
+      ]),
     }
   }
   const version = data.schemaVersion

@@ -22,7 +22,8 @@ export function useAppearance() {
 /** Какая тема на экране сейчас — с учётом системной, если выбрано «как в системе». */
 export function useEffectiveTheme() {
   const store = useProgressStore()
-  const media = typeof window !== 'undefined' && window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null
+  const media =
+    typeof window !== 'undefined' && window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null
   const systemDark = ref(media?.matches ?? false)
   const onChange = (e: MediaQueryListEvent) => (systemDark.value = e.matches)
   media?.addEventListener('change', onChange)

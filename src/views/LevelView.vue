@@ -236,7 +236,9 @@ const cta = computed<Cta | null>(() => {
               <span v-if="mixedSources && film.status === 'proposed-expansion'"> · предложение</span>
             </p>
             <h3 class="film__title">
-              <RouterLink :to="{ name: 'film', params: { filmId: film.id } }" class="film__link">{{ film.title }}</RouterLink>
+              <RouterLink :to="{ name: 'film', params: { filmId: film.id } }" class="film__link">{{
+                film.title
+              }}</RouterLink>
             </h3>
             <p class="film__director">{{ film.director }}</p>
             <p class="film__focus">{{ film.learningFocus }}</p>
@@ -274,7 +276,9 @@ const cta = computed<Cta | null>(() => {
       </div>
       <p v-else class="completion__lead">
         Условия видны заранее. Длинный текст по каждому фильму не нужен — достаточно выполнить пункты ниже.
-        <template v-if="store.settings.lightMode">Включён облегчённый режим: вместо упражнения хватит короткой заметки.</template>
+        <template v-if="store.settings.lightMode"
+          >Включён облегчённый режим: вместо упражнения хватит короткой заметки.</template
+        >
       </p>
       <CriteriaList v-if="!completedAt" :criteria="stats.criteria" />
 
@@ -288,12 +292,19 @@ const cta = computed<Cta | null>(() => {
       />
 
       <div v-if="!completedAt && !locked" class="completion__action">
-        <AppButton variant="primary" :disabled="!stats.canComplete" aria-describedby="completion-hint" @click="finishLevel">
+        <AppButton
+          variant="primary"
+          :disabled="!stats.canComplete"
+          aria-describedby="completion-hint"
+          @click="finishLevel"
+        >
           Завершить уровень
         </AppButton>
         <p id="completion-hint" class="completion__hint">
           <template v-if="stats.canComplete">
-            Все условия выполнены.<template v-if="store.settings.showGamification"> За уровень — {{ XP_RULES.levelCompleted }} XP.</template>
+            Все условия выполнены.<template v-if="store.settings.showGamification">
+              За уровень — {{ XP_RULES.levelCompleted }} XP.</template
+            >
           </template>
           <template v-else>Кнопка станет доступна, когда все условия будут выполнены.</template>
         </p>
@@ -302,7 +313,11 @@ const cta = computed<Cta | null>(() => {
     </section>
 
     <nav class="neighbours" aria-label="Соседние уровни">
-      <RouterLink v-if="neighbours.prev" :to="{ name: 'level', params: { levelId: neighbours.prev.id } }" class="neighbour">
+      <RouterLink
+        v-if="neighbours.prev"
+        :to="{ name: 'level', params: { levelId: neighbours.prev.id } }"
+        class="neighbour"
+      >
         <span class="neighbour__dir">← Уровень {{ neighbours.prev.number }}</span>
         <span class="neighbour__title">{{ neighbours.prev.title }}</span>
       </RouterLink>
@@ -473,7 +488,11 @@ const cta = computed<Cta | null>(() => {
   gap: 0.5rem;
   padding: 1.1rem 1.2rem;
   border-top: 4px solid var(--tint-ink);
-  background: linear-gradient(180deg, color-mix(in srgb, var(--tint) 70%, var(--paper-raised)), var(--paper-raised) 8rem);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--tint) 70%, var(--paper-raised)),
+    var(--paper-raised) 8rem
+  );
   border-radius: var(--radius-s) var(--radius-s) var(--radius-m) var(--radius-m);
   box-shadow: var(--edge), var(--shadow);
 }
@@ -512,7 +531,11 @@ const cta = computed<Cta | null>(() => {
   padding: 0.9rem;
   border: 1px solid var(--line);
   border-radius: var(--radius-m);
-  background: linear-gradient(120deg, color-mix(in srgb, var(--tint) 40%, var(--paper-raised)), var(--paper-raised) 55%);
+  background: linear-gradient(
+    120deg,
+    color-mix(in srgb, var(--tint) 40%, var(--paper-raised)),
+    var(--paper-raised) 55%
+  );
   box-shadow: var(--edge), var(--shadow);
 }
 .film--completed,

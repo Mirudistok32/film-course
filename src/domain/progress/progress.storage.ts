@@ -143,7 +143,9 @@ export function readRaw(storage: KeyValueStorage | null): string | null {
 }
 
 /** Хранилище в памяти — для тестов и как запасной вариант. */
-export function createMemoryStorage(initial: Record<string, string> = {}): KeyValueStorage & { dump(): Record<string, string> } {
+export function createMemoryStorage(
+  initial: Record<string, string> = {},
+): KeyValueStorage & { dump(): Record<string, string> } {
   const data = new Map(Object.entries(initial))
   return {
     getItem: (k) => data.get(k) ?? null,

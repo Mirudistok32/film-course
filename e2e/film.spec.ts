@@ -20,7 +20,9 @@ test('прохождение фильма с нуля переживает пе�
 
   const observation = 'Окна и двери — кривые треугольники, ни одной прямой линии.'
   await page.getByLabel('Я заметил…').fill(observation)
-  await page.getByLabel('Ваш ответ', { exact: true }).fill('Декорации нарисованы: тени и свет написаны краской прямо на стенах.')
+  await page
+    .getByLabel('Ваш ответ', { exact: true })
+    .fill('Декорации нарисованы: тени и свет написаны краской прямо на стенах.')
   await page.getByRole('button', { name: 'Упражнение выполнено' }).click()
   await expect(page.getByText(/Упражнение выполнено \d/)).toBeVisible()
 
@@ -83,7 +85,9 @@ test('липкая полоса урока: переходы к разделам
 test('статусы на карте уровня и недоступная кнопка упражнения', async ({ page }) => {
   const errors = trackErrors(page)
   await open(page, '/course/level-01')
-  const card = page.getByRole('listitem').filter({ has: page.getByRole('link', { name: 'Кабинет доктора Калигари', exact: true }) })
+  const card = page
+    .getByRole('listitem')
+    .filter({ has: page.getByRole('link', { name: 'Кабинет доктора Калигари', exact: true }) })
   // «Не смотрел» не показывается на карточке, но остаётся словами для скринридера.
   await expect(card.getByText('Не смотрел')).toHaveClass(/visually-hidden/)
 

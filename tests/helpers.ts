@@ -18,7 +18,13 @@ export function makeTestCourse(): Course {
   const levelContent: Record<string, LevelContent> = {}
   for (const level of catalog.levels) {
     levelContent[level.id] = {
-      lecture: { principle: 'p', examples: [{ title: 'a', text: 'a' }, { title: 'b', text: 'b' }] },
+      lecture: {
+        principle: 'p',
+        examples: [
+          { title: 'a', text: 'a' },
+          { title: 'b', text: 'b' },
+        ],
+      },
       outcome: 'o',
       reflectionPrompt: 'r',
     }
@@ -29,7 +35,13 @@ export function makeTestCourse(): Course {
         lookFor: ['a', 'b'],
         duringCues: ['a', 'b'],
         afterQuestions: { observation: 'o', effect: 'e', interpretation: 'i' },
-        exercise: { title: 't', task: 't', lookAt: 'l', steps: ['1', '2'], tags: [TAG_BY_LEVEL[level.id] ?? 'synthesis'] },
+        exercise: {
+          title: 't',
+          task: 't',
+          lookAt: 'l',
+          steps: ['1', '2'],
+          tags: [TAG_BY_LEVEL[level.id] ?? 'synthesis'],
+        },
         samples: [{ title: 's', text: 's' }],
         terms: [],
       }

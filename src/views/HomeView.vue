@@ -69,7 +69,11 @@ const cta = computed<{ label: string; detail: string; to: RouteLocationRaw }>(()
     case 'graduation':
       return { label: 'К выпускной работе', detail: 'Все уровни пройдены', to: { name: 'graduation' } }
     default:
-      return { label: 'Открыть карту курса', detail: 'Курс пройден — можно возвращаться к любимым фильмам', to: { name: 'course' } }
+      return {
+        label: 'Открыть карту курса',
+        detail: 'Курс пройден — можно возвращаться к любимым фильмам',
+        to: { name: 'course' },
+      }
   }
 })
 
@@ -127,7 +131,9 @@ function exportNow() {
     <section class="hero container" aria-labelledby="home-title">
       <HeroScene class="hero__scene" />
       <div v-if="!store.started" class="hero__text">
-        <p class="eyebrow">Тренажёр внимательного просмотра · {{ stats.totalLevels }} уровней · {{ stats.totalFilms }} фильмов</p>
+        <p class="eyebrow">
+          Тренажёр внимательного просмотра · {{ stats.totalLevels }} уровней · {{ stats.totalFilms }} фильмов
+        </p>
         <h1 id="home-title">{{ course.title }}</h1>
         <p class="hero__lead">{{ course.description }}</p>
         <div class="hero__cta">
@@ -143,13 +149,19 @@ function exportNow() {
       <article class="card resume__card" :data-tint="resume.level ? levelTint(resume.level.number) : 'mint'">
         <div class="resume__art">
           <FilmCover v-if="resumeFilm" :film="resumeFilm" class="resume__cover" />
-          <LevelEmblem v-else-if="resume.step.kind === 'level'" :level="resume.step.level.number" class="resume__emblem" />
+          <LevelEmblem
+            v-else-if="resume.step.kind === 'level'"
+            :level="resume.step.level.number"
+            class="resume__emblem"
+          />
           <HankoStamp v-else :text="resume.step.kind === 'done' ? 'курс пройден' : 'все уровни'" center="13" />
         </div>
 
         <div class="resume__info">
           <p class="eyebrow">
-            Продолжить<template v-if="resume.level"> · уровень {{ resume.level.number }} «{{ resume.level.title }}»</template>
+            Продолжить<template v-if="resume.level">
+              · уровень {{ resume.level.number }} «{{ resume.level.title }}»</template
+            >
           </p>
           <template v-if="resumeFilm">
             <h2 id="resume-title" class="resume__title">«{{ resumeFilm.title }}»</h2>
@@ -165,7 +177,9 @@ function exportNow() {
           </template>
           <template v-else-if="resume.step.kind === 'graduation'">
             <h2 id="resume-title" class="resume__title">Выпускная работа</h2>
-            <p class="resume__where">Все уровни пройдены — осталась выпускная работа: разбор одного фильма от наблюдения до вопроса.</p>
+            <p class="resume__where">
+              Все уровни пройдены — осталась выпускная работа: разбор одного фильма от наблюдения до вопроса.
+            </p>
           </template>
           <template v-else>
             <h2 id="resume-title" class="resume__title">Курс пройден</h2>
@@ -174,16 +188,15 @@ function exportNow() {
         </div>
 
         <div v-if="resume.stats" class="resume__level">
-          <ProgressMeter
-            :value="resume.stats.completed"
-            :max="resume.stats.total"
-            :label="resumeLevelLabel"
-          />
+          <ProgressMeter :value="resume.stats.completed" :max="resume.stats.total" :label="resumeLevelLabel" />
         </div>
 
         <div class="resume__actions">
           <AppButton variant="primary" size="l" :to="cta.to">{{ cta.label }}</AppButton>
-          <RouterLink v-if="resume.level && resume.step.kind !== 'level'" :to="{ name: 'level', params: { levelId: resume.level.id } }">
+          <RouterLink
+            v-if="resume.level && resume.step.kind !== 'level'"
+            :to="{ name: 'level', params: { levelId: resume.level.id } }"
+          >
             Открыть уровень
           </RouterLink>
           <RouterLink :to="{ name: 'course' }">Карта курса</RouterLink>
@@ -204,7 +217,9 @@ function exportNow() {
             <p>{{ step.text }}</p>
           </li>
         </ol>
-        <IntertitleCard caption="главное правило курса">Сначала смотрите, потом объясняйте: наблюдение — раньше интерпретации.</IntertitleCard>
+        <IntertitleCard caption="главное правило курса"
+          >Сначала смотрите, потом объясняйте: наблюдение — раньше интерпретации.</IntertitleCard
+        >
       </component>
     </section>
 
@@ -234,7 +249,9 @@ function exportNow() {
           <ul v-if="recentNotes.length" class="notes__list">
             <li v-for="n in recentNotes" :key="n.id">
               <p class="notes__film">
-                <RouterLink v-if="n.film" :to="{ name: 'film', params: { filmId: n.film.id } }">«{{ n.film.title }}»</RouterLink>
+                <RouterLink v-if="n.film" :to="{ name: 'film', params: { filmId: n.film.id } }"
+                  >«{{ n.film.title }}»</RouterLink
+                >
                 <span v-else>Свободная заметка</span>
                 <span class="muted"> · {{ formatDateTime(n.updatedAt) }}</span>
               </p>
@@ -257,13 +274,15 @@ function exportNow() {
           <p v-if="reminder.show" class="backup__reminder">{{ reminder.message }} Самое время сохранить копию.</p>
           <p class="muted">
             Последняя копия:
-            {{ p.backup.lastExportAt ? formatDateTime(p.backup.lastExportAt) : 'ещё не скачивалась' }}. Файл JSON
-            можно загрузить обратно в любом браузере.
+            {{ p.backup.lastExportAt ? formatDateTime(p.backup.lastExportAt) : 'ещё не скачивалась' }}. Файл JSON можно
+            загрузить обратно в любом браузере.
           </p>
         </div>
         <div class="backup__actions">
           <AppButton variant="primary" @click="exportNow">Скачать копию (JSON)</AppButton>
-          <AppButton v-if="reminder.show" variant="ghost" @click="store.snoozeReminderDays(7)">Напомнить через неделю</AppButton>
+          <AppButton v-if="reminder.show" variant="ghost" @click="store.snoozeReminderDays(7)"
+            >Напомнить через неделю</AppButton
+          >
           <RouterLink :to="{ name: 'data' }">Импорт и настройки</RouterLink>
         </div>
       </div>

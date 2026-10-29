@@ -270,9 +270,7 @@ export function updateMotif(
   const exists = p.motifs.some((m) => m.id === id)
   if (!exists) return p
   const motifs = p.motifs.map((m) =>
-    m.id === id
-      ? { ...m, ...patch, filmIds: [...new Set(patch.filmIds ?? m.filmIds)], updatedAt: toIso(now) }
-      : m,
+    m.id === id ? { ...m, ...patch, filmIds: [...new Set(patch.filmIds ?? m.filmIds)], updatedAt: toIso(now) } : m,
   )
   return touch({ ...p, motifs }, now)
 }

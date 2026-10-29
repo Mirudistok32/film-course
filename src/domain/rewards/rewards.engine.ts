@@ -31,7 +31,8 @@ export function eligibleXpEvents(course: Course, p: UserProgress): EligibleXp[] 
   const facts = buildRewardFacts(course, p)
   const out: EligibleXp[] = []
   for (const film of course.films) {
-    if (facts.meaningfulFilmIds.has(film.id)) out.push({ id: `first-note:${film.id}`, amount: XP_RULES.firstMeaningfulNote })
+    if (facts.meaningfulFilmIds.has(film.id))
+      out.push({ id: `first-note:${film.id}`, amount: XP_RULES.firstMeaningfulNote })
     const fp = p.films[film.id]
     if (!fp) continue
     if (fp.watchStatus === 'watched') out.push({ id: `watched:${film.id}`, amount: XP_RULES.filmWatched })

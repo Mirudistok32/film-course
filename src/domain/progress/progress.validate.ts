@@ -47,8 +47,7 @@ export interface ValidationContext {
 }
 
 export type ValidationResult =
-  | { ok: true; progress: UserProgress; warnings: string[] }
-  | { ok: false; errors: string[]; warnings: string[] }
+  { ok: true; progress: UserProgress; warnings: string[] } | { ok: false; errors: string[]; warnings: string[] }
 
 type Obj = Record<string, unknown>
 const isObj = (v: unknown): v is Obj => typeof v === 'object' && v !== null && !Array.isArray(v)
@@ -206,7 +205,8 @@ function readNotes(c: Checker, list: unknown[], ctx: ValidationContext): Note[] 
     seen.add(id)
     let kind: NoteKind = 'free'
     if (raw.kind !== undefined) {
-      if (typeof raw.kind === 'string' && (NOTE_KINDS as readonly string[]).includes(raw.kind)) kind = raw.kind as NoteKind
+      if (typeof raw.kind === 'string' && (NOTE_KINDS as readonly string[]).includes(raw.kind))
+        kind = raw.kind as NoteKind
       else c.warn('У заметки незнакомый тип — она сохранена как свободная.')
     }
     const filmIdRaw = raw.filmId

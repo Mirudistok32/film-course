@@ -73,8 +73,14 @@ describe('ошибочные файлы', () => {
     ['[]', 'not-object'],
     [JSON.stringify({ format: 'other', schemaVersion: 1, progress: {} }), 'wrong-format'],
     [JSON.stringify({ format: 'kino-kak-sposob-myshleniya-progress', progress: {} }), 'missing-version'],
-    [JSON.stringify({ format: 'kino-kak-sposob-myshleniya-progress', schemaVersion: 99, progress: {} }), 'newer-version'],
-    [JSON.stringify({ format: 'kino-kak-sposob-myshleniya-progress', schemaVersion: 1.5, progress: {} }), 'unsupported-version'],
+    [
+      JSON.stringify({ format: 'kino-kak-sposob-myshleniya-progress', schemaVersion: 99, progress: {} }),
+      'newer-version',
+    ],
+    [
+      JSON.stringify({ format: 'kino-kak-sposob-myshleniya-progress', schemaVersion: 1.5, progress: {} }),
+      'unsupported-version',
+    ],
   ])('%s → %s', (text, code) => {
     const r = parseImportText(text, course)
     expect(r.ok).toBe(false)
@@ -156,7 +162,12 @@ describe('миграция v1 → v2', () => {
     data.progress.xp = 70
     data.progress.films['the-cabinet-of-dr-caligari'].exerciseCompleted = true
     data.progress.films['the-cabinet-of-dr-caligari'].notes = [
-      { id: 'old-1', text: 'Старая заметка', createdAt: '2026-10-28T16:40:00.000Z', updatedAt: '2026-10-28T16:40:00.000Z' },
+      {
+        id: 'old-1',
+        text: 'Старая заметка',
+        createdAt: '2026-10-28T16:40:00.000Z',
+        updatedAt: '2026-10-28T16:40:00.000Z',
+      },
     ]
     const r = parseImportText(JSON.stringify(data), course)
     expect(r.ok).toBe(true)
@@ -179,8 +190,22 @@ describe('объединение', () => {
   it('не понижает завершённый фильм до непросмотренного (тест ТЗ №9)', () => {
     const done = richProgress()
     const fresh = createInitialProgress(later)
-    const behind = { ...fresh, films: { [f1]: { ...done.films[f1]!, watchStatus: 'not-watched' as const, watchedAt: null, completedAt: null, analysisStatus: 'not-started' as const } } }
-    for (const [a, b] of [[done, behind], [behind, done]] as const) {
+    const behind = {
+      ...fresh,
+      films: {
+        [f1]: {
+          ...done.films[f1]!,
+          watchStatus: 'not-watched' as const,
+          watchedAt: null,
+          completedAt: null,
+          analysisStatus: 'not-started' as const,
+        },
+      },
+    }
+    for (const [a, b] of [
+      [done, behind],
+      [behind, done],
+    ] as const) {
       const { progress } = mergeProgress(a, b, later)
       expect(progress.films[f1]?.watchStatus).toBe('watched')
       expect(progress.films[f1]?.completedAt).toBe(done.films[f1]?.completedAt)
@@ -214,7 +239,11 @@ describe('объединение', () => {
   })
 
   it('повторный импорт того же файла ничего не дублирует (XP, ачивки, заметки)', () => {
-    const mine = evaluateRewards(course, markWatched(createInitialProgress(T0), course.levels[1]!.films[0]!.id, T0), T0).progress
+    const mine = evaluateRewards(
+      course,
+      markWatched(createInitialProgress(T0), course.levels[1]!.films[0]!.id, T0),
+      T0,
+    ).progress
     const theirs = richProgress()
     const once = mergeProgress(mine, theirs, later).progress
     const twice = mergeProgress(once, theirs, later)
@@ -230,7 +259,9 @@ describe('объединение', () => {
   it('ачивки объединяются по id с самой ранней датой', () => {
     const a = { ...createInitialProgress(T0), achievements: [{ id: 'first-viewing', unlockedAt: later.toISOString() }] }
     const b = { ...createInitialProgress(T0), achievements: [{ id: 'first-viewing', unlockedAt: T0.toISOString() }] }
-    expect(mergeProgress(a, b, later).progress.achievements).toEqual([{ id: 'first-viewing', unlockedAt: T0.toISOString() }])
+    expect(mergeProgress(a, b, later).progress.achievements).toEqual([
+      { id: 'first-viewing', unlockedAt: T0.toISOString() },
+    ])
   })
 
   it('результат объединения проходит валидацию', () => {

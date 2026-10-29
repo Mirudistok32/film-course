@@ -68,16 +68,16 @@ function setWeeklyGoal(on: boolean) {
       <p class="eyebrow">Ранги · достижения · активность</p>
       <h1>Достижения</h1>
       <p class="ach__lead">
-        Ранг — метафора накопленного опыта, а не оценка способностей. Опыт и открытые достижения не сгорают:
-        перерывы ничего не отнимают, а повторные действия не начисляют очки второй раз.
+        Ранг — метафора накопленного опыта, а не оценка способностей. Опыт и открытые достижения не сгорают: перерывы
+        ничего не отнимают, а повторные действия не начисляют очки второй раз.
       </p>
     </header>
 
     <section v-if="!gamified" class="card hidden-note" aria-labelledby="hidden-title">
       <h2 id="hidden-title" class="card__title">Игровые элементы скрыты</h2>
       <p class="muted">
-        Вы выключили ранги, очки опыта и достижения. Они продолжают считаться в фоне — ваш прогресс не теряется,
-        и при включении всё появится с настоящими датами открытия.
+        Вы выключили ранги, очки опыта и достижения. Они продолжают считаться в фоне — ваш прогресс не теряется, и при
+        включении всё появится с настоящими датами открытия.
       </p>
       <div class="hidden-note__actions">
         <AppButton variant="primary" @click="setGamification(true)">Показать ранги и достижения</AppButton>
@@ -89,7 +89,9 @@ function setWeeklyGoal(on: boolean) {
         <article class="card rank__now" data-tint="butter">
           <p class="eyebrow">Ваш ранг</p>
           <h2 id="rank-title" class="rank__title">{{ rank.rank.title }}</h2>
-          <p class="rank__xp"><strong>{{ p.xp }}</strong> XP опыта</p>
+          <p class="rank__xp">
+            <strong>{{ p.xp }}</strong> XP опыта
+          </p>
           <ProgressMeter
             v-if="rank.next"
             :value="p.xp - rank.rank.minXp"
@@ -120,8 +122,8 @@ function setWeeklyGoal(on: boolean) {
       <section class="xp" aria-labelledby="xp-title">
         <h2 id="xp-title">Как набирается опыт</h2>
         <p class="muted prose">
-          Очки дают проверяемые шаги, а не клики: правка опечатки, повторное открытие урока или повторный импорт
-          того же файла ничего не добавляют.
+          Очки дают проверяемые шаги, а не клики: правка опечатки, повторное открытие урока или повторный импорт того же
+          файла ничего не добавляют.
         </p>
         <table class="xp__table">
           <thead>
@@ -159,8 +161,8 @@ function setWeeklyGoal(on: boolean) {
             :label="`Открыто ${board.unlocked} из ${board.total}`"
           />
           <p class="board__legend">
-            Форма значка подсказывает раздел. Открытый значок — оттиск с датой, закрытый — пунктирный контур
-            с подсказкой, как его получить.
+            Форма значка подсказывает раздел. Открытый значок — оттиск с датой, закрытый — пунктирный контур с
+            подсказкой, как его получить.
           </p>
           <ul class="legend">
             <li v-for="g in GROUP_LEGEND" :key="g.figure">
@@ -170,7 +172,13 @@ function setWeeklyGoal(on: boolean) {
           </ul>
         </div>
 
-        <section v-for="s in board.sections" :key="s.group" class="group" :data-tint="GROUP_TINT[s.group]" :aria-labelledby="`group-${s.group}`">
+        <section
+          v-for="s in board.sections"
+          :key="s.group"
+          class="group"
+          :data-tint="GROUP_TINT[s.group]"
+          :aria-labelledby="`group-${s.group}`"
+        >
           <h3 :id="`group-${s.group}`" class="group__title">
             {{ s.title }}
             <span class="group__count">{{ s.unlocked }} из {{ s.cards.length }} · {{ s.shape }}</span>
@@ -210,23 +218,34 @@ function setWeeklyGoal(on: boolean) {
       <dl class="activity__stats">
         <div class="stat">
           <dt>Учебных дней за всё время</dt>
-          <dd>{{ activity.activeDays }} <span>{{ days(activity.activeDays) }}</span></dd>
+          <dd>
+            {{ activity.activeDays }} <span>{{ days(activity.activeDays) }}</span>
+          </dd>
         </div>
         <div class="stat">
           <dt>Недель, когда вы возвращались к курсу</dt>
-          <dd>{{ activity.activeWeeks }} <span>{{ weeks(activity.activeWeeks) }}</span></dd>
+          <dd>
+            {{ activity.activeWeeks }} <span>{{ weeks(activity.activeWeeks) }}</span>
+          </dd>
         </div>
         <div class="stat">
           <dt>Просмотрено на этой неделе</dt>
-          <dd>{{ activity.watchedThisWeek }} <span>{{ films(activity.watchedThisWeek) }}</span></dd>
+          <dd>
+            {{ activity.watchedThisWeek }} <span>{{ films(activity.watchedThisWeek) }}</span>
+          </dd>
         </div>
       </dl>
 
-      <div class="card goal" data-tint="mint" :class="{ 'goal--met': store.settings.weeklyGoal && activity.watchedThisWeek > 0 }">
+      <div
+        class="card goal"
+        data-tint="mint"
+        :class="{ 'goal--met': store.settings.weeklyGoal && activity.watchedThisWeek > 0 }"
+      >
         <h3>Личная цель «один фильм в неделю»</h3>
         <template v-if="store.settings.weeklyGoal">
           <p v-if="activity.watchedThisWeek > 0" class="goal__state">
-            Цель этой недели выполнена: просмотрено {{ activity.watchedThisWeek }} {{ films(activity.watchedThisWeek) }}.
+            Цель этой недели выполнена: просмотрено {{ activity.watchedThisWeek }}
+            {{ films(activity.watchedThisWeek) }}.
           </p>
           <p v-else class="goal__state">
             На этой неделе фильм ещё не отмечен. Неделя не закончилась — а если и закончится, ничего не сгорит.

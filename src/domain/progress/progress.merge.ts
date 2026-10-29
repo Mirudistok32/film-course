@@ -206,7 +206,12 @@ function mergeLevels(cur: Record<string, LevelProgress>, inc: Record<string, Lev
 function mergeGraduation(cur: GraduationWork, inc: GraduationWork, m: MergeState): GraduationWork {
   const length = Math.max(cur.decisions.length, inc.decisions.length)
   const decisions = Array.from({ length }, (_, i) => ({
-    observation: m.text(cur.decisions[i]?.observation, inc.decisions[i]?.observation, null, `graduation:decision-${i + 1}`),
+    observation: m.text(
+      cur.decisions[i]?.observation,
+      inc.decisions[i]?.observation,
+      null,
+      `graduation:decision-${i + 1}`,
+    ),
     effect: m.text(cur.decisions[i]?.effect, inc.decisions[i]?.effect, null, `graduation:effect-${i + 1}`),
   }))
   return {
@@ -221,7 +226,11 @@ function mergeGraduation(cur: GraduationWork, inc: GraduationWork, m: MergeState
   }
 }
 
-function mergeById<T extends { id: string }>(cur: T[], inc: T[], pick: (a: T, b: T) => T): { list: T[]; added: number } {
+function mergeById<T extends { id: string }>(
+  cur: T[],
+  inc: T[],
+  pick: (a: T, b: T) => T,
+): { list: T[]; added: number } {
   const map = new Map(cur.map((x) => [x.id, x]))
   let added = 0
   for (const item of inc) {
@@ -273,7 +282,8 @@ export function mergeProgress(
   const progress: UserProgress = {
     ...current,
     createdAt: earliestIso(current.createdAt, incoming.createdAt) ?? current.createdAt,
-    lastActiveDate: current.lastActiveDate >= incoming.lastActiveDate ? current.lastActiveDate : incoming.lastActiveDate,
+    lastActiveDate:
+      current.lastActiveDate >= incoming.lastActiveDate ? current.lastActiveDate : incoming.lastActiveDate,
     currentFilmId: current.currentFilmId ?? incoming.currentFilmId,
     currentLevelId: current.currentLevelId ?? incoming.currentLevelId,
     films,

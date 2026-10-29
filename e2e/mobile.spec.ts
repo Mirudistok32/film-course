@@ -1,7 +1,17 @@
 import { expect, test } from '@playwright/test'
 import { expectNoHorizontalScroll, fixture, open, seed, trackErrors } from './helpers'
 
-const PAGES = ['/', '/course', '/course/level-01', '/film/nosferatu', '/journal', '/glossary', '/achievements', '/settings/data', '/graduation']
+const PAGES = [
+  '/',
+  '/course',
+  '/course/level-01',
+  '/film/nosferatu',
+  '/journal',
+  '/glossary',
+  '/achievements',
+  '/settings/data',
+  '/graduation',
+]
 
 test('страницы без горизонтальной прокрутки и ошибок консоли', async ({ page }) => {
   const errors = trackErrors(page)

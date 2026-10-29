@@ -17,7 +17,9 @@ defineProps<{ criteria: Criterion[] }>()
       </svg>
       <span>
         {{ c.label }}
-        <span class="criterion__state">— {{ c.met ? 'выполнено' : 'ещё нет' }}<template v-if="c.detail && !c.met">, {{ c.detail }}</template></span>
+        <span class="criterion__state"
+          >— {{ c.met ? 'выполнено' : 'ещё нет' }}<template v-if="c.detail && !c.met">, {{ c.detail }}</template></span
+        >
       </span>
     </li>
   </ul>

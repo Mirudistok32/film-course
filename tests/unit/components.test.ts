@@ -35,7 +35,10 @@ describe('базовые компоненты', () => {
   })
 
   it('раскрывашка сообщает о первом открытии один раз', async () => {
-    const w = mount(DisclosurePanel, { props: { summary: 'Образец разбора', spoiler: true }, slots: { default: 'текст' } })
+    const w = mount(DisclosurePanel, {
+      props: { summary: 'Образец разбора', spoiler: true },
+      slots: { default: 'текст' },
+    })
     const details = w.get('details').element as HTMLDetailsElement
     for (let i = 0; i < 2; i++) {
       details.open = true
