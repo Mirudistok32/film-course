@@ -15,6 +15,12 @@ npm run build
 
 Для разработки — `npm run dev` (Vite с горячей перезагрузкой).
 
+## Публикация на GitHub Pages
+
+Workflow [.github/workflows/pages.yml](.github/workflows/pages.yml) на каждый пуш в `master` прогоняет линтер, тесты и сборку и выкладывает `dist/` на Pages. Один раз включить в репозитории: **Settings → Pages → Build and deployment → Source: GitHub Actions**. Перезапустить публикацию вручную — **Actions → Pages → Run workflow**.
+
+Сайт откроется по адресу `https://<пользователь>.github.io/<репозиторий>/`. Прогресс на опубликованном сайте хранится в `localStorage` домена `github.io` — отдельно от прогресса, накопленного в файле с диска; перенести его можно JSON-копией.
+
 ## Команды
 
 | Команда | Что делает |
