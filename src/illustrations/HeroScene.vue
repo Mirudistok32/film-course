@@ -62,7 +62,17 @@ const scene = computed(() => {
   const holes: number[] = []
   for (let x = 14; x < W; x += 40) holes.push(x)
   return {
-    tree: drawTree({ seed: `${props.seed}-tree`, x: 300, y: 466, height: 410, depth: 7, lean: 0.1, gnarl: 0.7 }),
+    tree: drawTree({
+      seed: `${props.seed}-wych`,
+      x: 300,
+      y: 466,
+      height: 410,
+      depth: 7,
+      lean: 0.1,
+      gnarl: 0.7,
+      fullness: 0.35,
+      rootPower: 1.8,
+    }),
     far: hills(`${props.seed}-far`, 372, 26),
     mid: hills(`${props.seed}-mid`, 414, 22),
     near: hills(`${props.seed}-near`, 452, 16),
@@ -110,7 +120,7 @@ const scene = computed(() => {
 
       <!-- Луч проектора от зрителя к луне; при прокрутке поворачивается вслед за луной. -->
       <g class="layer beam">
-        <path class="beam__light" d="M450 453 L790 150 L790 246 Z" :fill="`url(#${uid}-beam)`" />
+        <path class="beam__light" d="M332 412 L790 150 L790 246 Z" :fill="`url(#${uid}-beam)`" />
       </g>
 
       <g fill="var(--hero-cloud)">
@@ -135,17 +145,23 @@ const scene = computed(() => {
       <g fill="var(--hero-ink)">
         <path v-for="(d, i) in scene.tree.limbs" :key="`l${i}`" :d="d" />
       </g>
-      <g fill="none" stroke="var(--hero-ink)" stroke-width="1.6" stroke-linecap="round">
-        <path v-for="(d, i) in scene.tree.twigs" :key="`t${i}`" :d="d" />
-      </g>
-      <g fill="none" stroke="var(--hero-sky-bottom)" stroke-width="1.4" opacity="0.35">
-        <path v-for="(d, i) in scene.tree.knots" :key="`k${i}`" :d="d" />
-      </g>
+      <!-- Побеги и дупла — линии, их можно слить в один path: пышная крона не раздувает DOM. -->
+      <path :d="scene.tree.twigs.join('')" fill="none" stroke="var(--hero-ink)" stroke-width="1.6" stroke-linecap="round" />
+      <path :d="scene.tree.knots.join('')" fill="none" stroke="var(--hero-sky-bottom)" stroke-width="1.4" opacity="0.35" />
 
-      <!-- Зритель в капюшоне сидит у корней и смотрит на луну. Подол повторяет склон холма (y≈477 при x=418, y≈487 при x=454), чтобы фигура не висела в воздухе. -->
+      <!-- Зритель в капюшоне сидит среди корней, прислонившись спиной к стволу, и смотрит на луну.
+           Лунный контур с лицевой стороны отделяет фигуру от ствола того же цвета. -->
       <path
-        d="M418 479 Q416 462 426 452 Q424 439 434 437 Q445 438 443 450 Q450 457 451 467 L458 475 Q461 482 454 487 Q436 484 418 479 Z"
+        d="M309 466 L307 440 Q306 424 308 416 Q309 405 319 403 Q329 402 331 409 Q333 414 331 418 L330 421 Q334 423 339 425 L351 427 Q358 428 359 436 L360 458 Q365 462 365 466 Z"
         fill="var(--hero-figure)"
+      />
+      <path
+        d="M321 403 Q329 402 331 409 Q333 414 331 418 L330 421 Q334 423 339 425 L351 427 Q358 428 359 436 L360 458"
+        fill="none"
+        stroke="var(--hero-moon)"
+        stroke-width="1.6"
+        stroke-linecap="round"
+        opacity="0.55"
       />
 
       <g fill="none" stroke="var(--hero-ground)" stroke-width="2" stroke-linecap="round">
@@ -217,7 +233,7 @@ const scene = computed(() => {
 /* Луна опускается на 90 — луч поворачивается вокруг зрителя, чтобы упираться в неё. */
 @keyframes hero-beam-follow {
   to {
-    transform: rotate(11deg);
+    transform: rotate(9deg);
   }
 }
 @keyframes hero-stars-breath {
@@ -242,7 +258,7 @@ const scene = computed(() => {
       animation-range: exit 0% exit 100%;
     }
     :root:not([data-reduced-motion='true']) .beam {
-      transform-origin: 450px 453px;
+      transform-origin: 332px 412px;
       animation-name: hero-beam-follow;
     }
   }
