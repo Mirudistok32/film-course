@@ -3,9 +3,10 @@
  * Основное упражнение фильма (ТЗ §12.5–12.6): задача, на что смотреть,
  * шаги, личный ответ, самопроверка и образец разбора. Образец раскрывается
  * только по действию пользователя; оценивается ход мысли, а не совпадение
- * с «правильной» трактовкой.
+ * с «правильной» трактовкой. Отметка «выполнено» ставит печать: с оттиском —
+ * только сразу после нажатия.
  */
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useProgressStore } from '@/stores/progress'
 import {
   canCompleteExercise,
@@ -22,6 +23,7 @@ import { isMeaningful } from '@/domain/shared/text'
 import AnswerField from '@/components/AnswerField.vue'
 import AppButton from '@/components/AppButton.vue'
 import DisclosurePanel from '@/components/DisclosurePanel.vue'
+import HankoStamp from '@/illustrations/HankoStamp.vue'
 
 const props = withDefaults(
   defineProps<{
@@ -41,6 +43,17 @@ const completedAt = computed(() => fp.value?.exercise.completedAt ?? null)
 const canComplete = computed(() => canCompleteExercise(fp.value))
 const hasAttempt = computed(() => isMeaningful(fp.value?.exercise.response, 1))
 const message = ref('')
+/** Упражнение отмечено на глазах — печать проигрывает оттиск. */
+const pressed = ref(false)
+
+// Страница фильма не пересоздаётся при переходе к соседнему фильму.
+watch(
+  () => props.filmId,
+  () => {
+    message.value = ''
+    pressed.value = false
+  },
+)
 
 const response = computed({
   get: () => fp.value?.exercise.response ?? '',
@@ -56,7 +69,9 @@ function toggle(index: number) {
 function finish() {
   if (props.readonly || !canComplete.value) return
   store.apply((q, now) => completeExercise(q, props.filmId, now))
-  if (completedAt.value) message.value = 'Упражнение отмечено выполненным. Ответ можно дополнять и дальше.'
+  if (!completedAt.value) return
+  pressed.value = true
+  message.value = 'Упражнение отмечено выполненным. Ответ можно дополнять и дальше.'
 }
 
 function onSampleOpen() {
@@ -99,7 +114,7 @@ const sampleSummary = (s: SampleAnalysis) =>
     <p v-if="exercise.advanced" class="exercise__advanced"><strong>Если хочется пойти дальше:</strong> {{ exercise.advanced }}</p>
 
     <div v-if="completedAt" class="exercise__done">
-      <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="6.5" /><path d="M5 8.2l2 2 4-4.2" /></svg>
+      <HankoStamp class="exercise__stamp" text="выполнено" :tilt="-4" :press="pressed" aria-hidden="true" />
       <span>Упражнение выполнено {{ formatDate(completedAt) }}</span>
     </div>
     <div v-else-if="!readonly" class="exercise__action">
@@ -219,14 +234,10 @@ const sampleSummary = (s: SampleAnalysis) =>
   font-weight: 560;
   color: var(--moss);
 }
-.exercise__done svg {
-  width: 1.4rem;
-  height: 1.4rem;
-  fill: var(--moss-wash);
-  stroke: var(--moss);
-  stroke-width: 1.6;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+/* Промежуточная отметка — печать цвета мха, киноварь остаётся за итогом фильма. */
+.exercise__done .exercise__stamp {
+  --hanko-size: 3rem;
+  color: var(--moss);
 }
 .exercise__message:empty {
   display: none;

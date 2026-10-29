@@ -17,9 +17,9 @@ body {
   min-height: 100vh;
   /* Пастельные пятна света вверху страницы — как блики на плёнке. */
   background:
-    radial-gradient(38rem 28rem at 6% -4rem, color-mix(in srgb, var(--tint-rose) 75%, transparent), transparent 70%) no-repeat,
-    radial-gradient(40rem 30rem at 96% 2rem, color-mix(in srgb, var(--tint-sky) 75%, transparent), transparent 70%) no-repeat,
-    radial-gradient(46rem 30rem at 55% 34rem, color-mix(in srgb, var(--tint-butter) 55%, transparent), transparent 70%) no-repeat,
+    radial-gradient(38rem 28rem at 6% -4rem, var(--glow-1), transparent 70%) no-repeat,
+    radial-gradient(40rem 30rem at 96% 2rem, var(--glow-2), transparent 70%) no-repeat,
+    radial-gradient(46rem 30rem at 55% 34rem, var(--glow-3), transparent 70%) no-repeat,
     var(--paper);
   color: var(--ink);
   font-family: var(--font-body);
@@ -170,35 +170,42 @@ hr {
   background: var(--paper-raised);
   border: 1px solid var(--line);
   border-radius: var(--radius-m);
-  box-shadow: var(--shadow);
+  box-shadow: var(--edge), var(--shadow);
   padding: clamp(1rem, 3vw, 1.5rem);
 }
 
-/* ---------- Пастель: data-tint на любом блоке задаёт --tint и --tint-ink ---------- */
+/* ---------- Пастель: data-tint на любом блоке задаёт --tint и --tint-ink ----------
+   В «кинозале» заливка подсвечена своими же чернилами (--tint-lift), иначе
+   тёмные пастели сливаются с фоном. */
 
 [data-tint='rose'] {
-  --tint: var(--tint-rose);
+  --tint: color-mix(in srgb, var(--tint-rose-ink) var(--tint-lift), var(--tint-rose));
   --tint-ink: var(--tint-rose-ink);
 }
 [data-tint='peach'] {
-  --tint: var(--tint-peach);
+  --tint: color-mix(in srgb, var(--tint-peach-ink) var(--tint-lift), var(--tint-peach));
   --tint-ink: var(--tint-peach-ink);
 }
 [data-tint='butter'] {
-  --tint: var(--tint-butter);
+  --tint: color-mix(in srgb, var(--tint-butter-ink) var(--tint-lift), var(--tint-butter));
   --tint-ink: var(--tint-butter-ink);
 }
 [data-tint='mint'] {
-  --tint: var(--tint-mint);
+  --tint: color-mix(in srgb, var(--tint-mint-ink) var(--tint-lift), var(--tint-mint));
   --tint-ink: var(--tint-mint-ink);
 }
 [data-tint='sky'] {
-  --tint: var(--tint-sky);
+  --tint: color-mix(in srgb, var(--tint-sky-ink) var(--tint-lift), var(--tint-sky));
   --tint-ink: var(--tint-sky-ink);
 }
 [data-tint='lavender'] {
-  --tint: var(--tint-lavender);
+  --tint: color-mix(in srgb, var(--tint-lavender-ink) var(--tint-lift), var(--tint-lavender));
   --tint-ink: var(--tint-lavender-ink);
+}
+/* Фокус внутри блока уровня — его «чернилами»: синее кольцо на тёмной
+   пастели «кинозала» почти не видно (2:1), а --tint-ink на бумаге — от 5:1. */
+[data-tint] {
+  --focus: var(--tint-ink);
 }
 
 /* Карточка с оттенком: цветная полоса сверху и мягкая заливка, уходящая в бумагу. */

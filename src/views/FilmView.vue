@@ -5,6 +5,8 @@
  * в липкой полосе вместе с переходами к упражнению, заметкам и итогу. Материал выдаётся порциями: открыт один шаг, образец
  * разбора — только по действию. Просмотр отмечается отдельно от разбора.
  * В строгом порядке фильм закрытого уровня открыт только для чтения.
+ * Отметки просмотра и итога ставят печать с коротким оттиском и засвечивают
+ * кадр полосы шагов — только по действию, не при открытии страницы.
  */
 import { computed, nextTick, ref, watch } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
@@ -28,6 +30,7 @@ import {
   filmCompletionCriteria,
   filmDisplayStatus,
   filmStartStage,
+  filmSteps,
   isLevelLocked,
   type FilmStage,
 } from '@/domain/progress/progress.selectors'
@@ -35,11 +38,13 @@ import { filmNeighbours } from '@/domain/catalog/catalog'
 import type { GlossaryTerm } from '@/domain/catalog/catalog.types'
 import { XP_RULES } from '@/domain/rewards/rewards.config'
 import { formatDate } from '@/domain/shared/dates'
+import { plural } from '@/domain/shared/text'
 import { levelTint } from '@/domain/shared/tint'
 import AppButton from '@/components/AppButton.vue'
 import CriteriaList from '@/components/CriteriaList.vue'
 import FilmCover from '@/components/FilmCover.vue'
 import IntertitleCard from '@/components/IntertitleCard.vue'
+import ProgressMeter from '@/components/ProgressMeter.vue'
 import StatusBadge from '@/components/StatusBadge.vue'
 import AnswerChain from '@/components/film/AnswerChain.vue'
 import FilmExercise from '@/components/film/FilmExercise.vue'
@@ -83,6 +88,16 @@ const terms = computed(() =>
 
 const gamified = computed(() => store.settings.showGamification)
 const message = ref('')
+/** Какую печать только что поставили на этой странице — её оттиск проигрывается. */
+const pressed = ref<'watched' | 'completed' | null>(null)
+
+const steps = computed(() => (film.value ? filmSteps(p.value, film.value.id) : null))
+const stepsLabel = computed(() => {
+  const s = steps.value
+  if (!s) return ''
+  // Неразрывный пробел перед тире: строка не начинается с «— упражнение».
+  return s.next ? `Шаги фильма: ${s.done} из ${s.total}. Дальше\u00a0— ${s.next}` : `Все ${s.total} ${plural(s.total, ['шаг', 'шага', 'шагов'])} фильма пройдены`
+})
 
 /* ---------- Шаги урока ---------- */
 
@@ -93,6 +108,7 @@ watch(
   () => film.value?.id,
   (id) => {
     message.value = ''
+    pressed.value = null
     if (!id || !film.value) return
     initialStage.value = filmStartStage(p.value.films[id])
     const levelId = film.value.levelId
@@ -164,6 +180,7 @@ function watched() {
   const id = film.value?.id
   if (!id) return
   act((q, now) => markWatched(q, id, now))
+  if (fp.value?.watchStatus === 'watched') pressed.value = 'watched'
   message.value = gamified.value
     ? `Просмотр отмечен (+${XP_RULES.filmWatched} XP). Разбор можно начать сейчас или позже.`
     : 'Просмотр отмечен. Разбор можно начать сейчас или позже.'
@@ -199,7 +216,9 @@ function finishFilm() {
   const id = film.value?.id
   if (!id || !canComplete.value) return
   act((q, now) => completeFilm(q, id, now))
-  if (fp.value?.completedAt) message.value = 'Фильм пройден. К нему можно возвращаться: новые заметки тоже сохраняются.'
+  if (!fp.value?.completedAt) return
+  pressed.value = 'completed'
+  message.value = 'Фильм пройден. К нему можно возвращаться: новые заметки тоже сохраняются.'
 }
 </script>
 
@@ -227,6 +246,8 @@ function finishFilm() {
 
       <aside class="card status" :data-tint="levelTint(level.number)" aria-label="Ваш статус и действия">
         <StatusBadge :film="status" />
+        <!-- key: при переходе к соседнему фильму полоса появляется заново, без заливки чужих кадров. -->
+        <ProgressMeter v-if="steps" :key="film.id" class="status__steps" :value="steps.done" :max="steps.total" :lit="steps.lit" :label="stepsLabel" />
         <template v-if="!locked">
           <template v-if="fp?.watchStatus === 'watched'">
             <p class="status__fact">Просмотрен {{ formatDate(fp.watchedAt) }}</p>
@@ -248,7 +269,10 @@ function finishFilm() {
         </template>
         <p class="status__message" role="status">{{ message }}</p>
         <span v-if="fp?.completedAt" class="status__stamp" aria-hidden="true">
-          <HankoStamp text="фильм пройден" />
+          <HankoStamp text="фильм пройден" :press="pressed === 'completed'" />
+        </span>
+        <span v-else-if="fp?.watchStatus === 'watched'" class="status__stamp status__stamp--watched" aria-hidden="true">
+          <HankoStamp text="просмотрен" :tilt="6" :press="pressed === 'watched'" />
         </span>
       </aside>
     </header>
@@ -344,7 +368,7 @@ function finishFilm() {
     <section ref="completionEl" class="completion card" tabindex="-1" aria-labelledby="completion-title">
       <h2 id="completion-title">Итог фильма</h2>
       <div v-if="fp?.completedAt" class="completion__done">
-        <HankoStamp class="completion__stamp" text="фильм пройден" />
+        <HankoStamp class="completion__stamp" text="фильм пройден" :press="pressed === 'completed'" />
         <p>
           <strong>Фильм пройден</strong> ({{ formatDate(fp.completedAt) }}). К нему можно возвращаться: пересматривать,
           дописывать ответы и заметки.
@@ -449,7 +473,7 @@ function finishFilm() {
 }
 .head__source {
   font-size: 0.9rem;
-  color: var(--ink-faint);
+  color: var(--ink-soft);
 }
 
 .status {
@@ -481,6 +505,14 @@ function finishFilm() {
   top: 0.6rem;
   right: 0.7rem;
   pointer-events: none;
+}
+/* Подпись шагов не заходит под печать в углу карточки. */
+.status__steps {
+  padding-right: 3.5rem;
+}
+/* Просмотр — промежуточная отметка: печать тише киновари итога. */
+.status__stamp--watched .hanko {
+  color: var(--moss);
 }
 .icon {
   width: 1.05rem;

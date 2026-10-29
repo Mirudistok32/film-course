@@ -55,18 +55,28 @@ const uid = useId()
 }
 .field__hint {
   font-size: 0.92rem;
-  color: var(--ink-soft);
+  color: color-mix(in srgb, var(--ink-soft) 60%, var(--ink));
 }
 .field__input {
+  /* Как в AnswerField: цвет уровня внутри data-tint, иначе тушь. */
+  --field-ink: var(--tint-ink, var(--ink-soft));
   width: 100%;
   min-height: 2.9rem;
   padding: 0.5rem 0.9rem;
-  border: 1.5px solid var(--line-strong);
+  border: 1.5px solid color-mix(in srgb, var(--field-ink) 60%, var(--line-strong));
   border-radius: var(--radius-s);
   background: var(--paper-raised);
+  transition:
+    border-color var(--dur) var(--ease),
+    box-shadow var(--dur) var(--ease);
+}
+.field__input:hover:not(:read-only, :disabled) {
+  border-color: var(--field-ink);
 }
 .field__input:focus-visible {
-  outline-offset: 1px;
-  border-color: var(--focus);
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+  border-color: var(--field-ink);
+  box-shadow: inset 0 0 0 1px var(--field-ink);
 }
 </style>

@@ -269,10 +269,13 @@ function toggleAbout(levelId: string) {
 .frame--current {
   box-shadow: inset 0 0 0 2px var(--accent);
 }
-/* Вся карточка кликабельна через растянутую ссылку; фокус рисуется на кадре. */
+/*
+ * Вся карточка кликабельна через растянутую ссылку; фокус рисуется на кадре —
+ * внутри него (снаружи тёмная плёнка) и цветом уровня, см. [data-tint] в base.css.
+ */
 .frame:has(.frame__link:focus-visible) {
   outline: 3px solid var(--focus);
-  outline-offset: 3px;
+  outline-offset: -7px;
 }
 .frame__link {
   text-decoration: none;
@@ -346,7 +349,7 @@ function toggleAbout(levelId: string) {
 }
 .frame__note {
   font-size: 0.85rem;
-  color: var(--ink-faint);
+  color: var(--ink-soft);
 }
 
 .frame__stamp {
@@ -439,8 +442,9 @@ function toggleAbout(levelId: string) {
   border-top-color: var(--accent);
   border-right-color: var(--accent);
 }
+/* Кольцо лежит на тёмной плёнке ролика — светлое, с оттенком уровня. */
 .reel__cell:focus-visible {
-  outline: 3px solid var(--focus);
+  outline: 3px solid color-mix(in srgb, var(--tint-ink) 30%, var(--intertitle-ink));
   outline-offset: 2px;
 }
 

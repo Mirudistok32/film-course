@@ -2,7 +2,7 @@
 /**
  * Запись журнала: заметка (читать, изменить на месте, удалить) или разбор
  * фильма (только чтение, правится на странице фильма). Заголовок — фильм
- * со ссылкой на урок, у свободной заметки — «Свободная заметка».
+ * со ссылкой на урок и маленькой обложкой, у свободной заметки — «Свободная заметка».
  */
 import { computed, nextTick, ref } from 'vue'
 import { RouterLink } from 'vue-router'
@@ -15,6 +15,7 @@ import { formatDateTime } from '@/domain/shared/dates'
 import { excerpt, normalizeText } from '@/domain/shared/text'
 import { levelTint } from '@/domain/shared/tint'
 import AppButton from '@/components/AppButton.vue'
+import FilmCover from '@/components/FilmCover.vue'
 import NoteEditor from './NoteEditor.vue'
 
 const props = defineProps<{ entry: JournalEntry }>()
@@ -60,20 +61,25 @@ function save(value: { text: string; kind: NoteKind; filmId: string | null }) {
     :class="`entry--${entry.type}`"
     :data-tint="film ? levelTint(film.levelNumber) : 'lavender'"
   >
-    <p class="entry__kind">
-      {{ note ? NOTE_KIND_LABEL[note.kind] : 'Разбор фильма' }}
-    </p>
-    <h3 class="entry__title">
-      <RouterLink v-if="film" :to="{ name: 'film', params: { filmId: film.id } }">{{ film.title }}</RouterLink>
-      <template v-else>Свободная заметка</template>
-    </h3>
-    <p class="entry__meta">
-      <template v-if="film">Уровень {{ film.levelNumber }} · {{ film.year }} · </template>
-      <template v-if="note">
-        {{ formatDateTime(note.createdAt) }}<template v-if="edited">, изменена {{ formatDateTime(note.updatedAt) }}</template>
-      </template>
-      <template v-else>обновлён {{ formatDateTime(entry.date) }}</template>
-    </p>
+    <div class="entry__head">
+      <FilmCover v-if="film" :film="film" class="entry__cover" />
+      <div class="entry__heading">
+        <p class="entry__kind">
+          {{ note ? NOTE_KIND_LABEL[note.kind] : 'Разбор фильма' }}
+        </p>
+        <h3 class="entry__title">
+          <RouterLink v-if="film" :to="{ name: 'film', params: { filmId: film.id } }">{{ film.title }}</RouterLink>
+          <template v-else>Свободная заметка</template>
+        </h3>
+        <p class="entry__meta">
+          <template v-if="film">Уровень {{ film.levelNumber }} · {{ film.year }} · </template>
+          <template v-if="note">
+            {{ formatDateTime(note.createdAt) }}<template v-if="edited">, изменена {{ formatDateTime(note.updatedAt) }}</template>
+          </template>
+          <template v-else>обновлён {{ formatDateTime(entry.date) }}</template>
+        </p>
+      </div>
+    </div>
 
     <template v-if="note">
       <NoteEditor
@@ -129,17 +135,31 @@ function save(value: { text: string; kind: NoteKind; filmId: string | null }) {
   border-left: 4px solid color-mix(in srgb, var(--tint-ink) 55%, var(--tint));
   border-radius: 0 var(--radius-m) var(--radius-m) 0;
   background: linear-gradient(100deg, color-mix(in srgb, var(--tint) 60%, var(--paper-raised)), var(--paper-raised) 45%);
-  box-shadow: var(--shadow);
+  box-shadow: var(--edge), var(--shadow);
   min-width: 0;
 }
 .entry--analysis {
   border-left-color: var(--tint-ink);
 }
+.entry__head {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+}
+.entry__cover {
+  flex: none;
+  width: 4rem;
+}
+.entry__heading {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
 .entry__kind {
   font-size: 0.8rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--ink-faint);
+  color: var(--ink-soft);
 }
 .entry__title {
   font-size: 1.45rem;

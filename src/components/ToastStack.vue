@@ -80,7 +80,7 @@ const KIND_LABEL: Record<Toast['kind'], string> = {
   border-left: 4px solid var(--ink);
   border-radius: var(--radius-s);
   background: var(--paper-raised);
-  box-shadow: var(--shadow);
+  box-shadow: var(--edge), var(--shadow);
   animation: toast-in 240ms var(--ease);
 }
 .toast--achievement {

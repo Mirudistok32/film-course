@@ -6,6 +6,7 @@ import AnswerField from '@/components/AnswerField.vue'
 import DisclosurePanel from '@/components/DisclosurePanel.vue'
 import StatusBadge from '@/components/StatusBadge.vue'
 import ProgressMeter from '@/components/ProgressMeter.vue'
+import HankoStamp from '@/illustrations/HankoStamp.vue'
 
 describe('иллюстрации', () => {
   it('дерево с одним сидом всегда одинаковое, с разными — разное', () => {
@@ -56,5 +57,28 @@ describe('базовые компоненты', () => {
     expect(w.text()).toContain('3 из 7 фильмов пройдены')
     expect(w.findAll('.frame')).toHaveLength(7)
     expect(w.findAll('.frame--on')).toHaveLength(3)
+  })
+
+  it('полоса заливает только кадры, засвеченные после появления', async () => {
+    const w = mount(ProgressMeter, { props: { value: 1, max: 3, label: 'Шаги фильма' } })
+    expect(w.findAll('.frame--fresh')).toHaveLength(0)
+    await w.setProps({ value: 3 })
+    expect(w.findAll('.frame').map((f) => f.classes('frame--fresh'))).toEqual([false, true, true])
+    await w.setProps({ value: 2 })
+    expect(w.findAll('.frame--fresh')).toHaveLength(1)
+  })
+
+  it('шаги не по порядку засвечивают именно выполненные кадры', async () => {
+    const w = mount(ProgressMeter, { props: { value: 1, max: 3, lit: [false, true, false], label: 'Шаги фильма' } })
+    expect(w.findAll('.frame').map((f) => f.classes('frame--on'))).toEqual([false, true, false])
+    await w.setProps({ value: 2, lit: [true, true, false] })
+    expect(w.findAll('.frame').map((f) => f.classes('frame--fresh'))).toEqual([true, false, false])
+  })
+
+  it('печать проигрывает оттиск только по флагу press', () => {
+    expect(mount(HankoStamp).classes()).not.toContain('hanko--press')
+    const w = mount(HankoStamp, { props: { text: 'просмотрен', press: true } })
+    expect(w.classes()).toContain('hanko--press')
+    expect(w.attributes('aria-label')).toBe('Печать: просмотрен')
   })
 })

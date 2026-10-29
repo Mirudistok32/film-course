@@ -473,7 +473,7 @@ function setWeeklyGoal(on: boolean) {
   border-style: solid;
   border-color: color-mix(in srgb, var(--tint-ink) 25%, var(--line));
   background: linear-gradient(135deg, var(--tint), var(--paper-raised) 70%);
-  box-shadow: var(--shadow);
+  box-shadow: var(--edge), var(--shadow);
 }
 .ach-card__body {
   display: grid;
@@ -486,8 +486,9 @@ function setWeeklyGoal(on: boolean) {
   font-size: 0.85rem;
   color: var(--ink-soft);
 }
+/* Цвет группы, а не киноварь: на подсвеченной заливке «кинозала» киноварь бледнеет до 3.7:1. */
 .ach-card--on .ach-card__state {
-  color: var(--accent);
+  color: var(--tint-ink);
   font-weight: 600;
 }
 .ach-card__text {

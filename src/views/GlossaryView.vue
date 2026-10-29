@@ -315,7 +315,7 @@ watch(
 .toc__count {
   font-family: var(--font-accent);
   font-size: 0.85rem;
-  color: var(--ink-faint);
+  color: var(--ink-soft);
 }
 
 /* ---------- Темы и статьи ---------- */
@@ -351,7 +351,7 @@ watch(
   border-top: 4px solid color-mix(in srgb, var(--tint-ink) 45%, var(--tint));
   border-radius: var(--radius-m);
   background: linear-gradient(180deg, color-mix(in srgb, var(--tint) 70%, var(--paper-raised)), var(--paper-raised) 9rem);
-  box-shadow: var(--shadow);
+  box-shadow: var(--edge), var(--shadow);
   scroll-margin-top: 1rem;
 }
 /* Статья, к которой пришли по ссылке из урока или уровня. */
@@ -410,7 +410,7 @@ watch(
 }
 .entry__count {
   font-weight: 400;
-  color: var(--ink-faint);
+  color: var(--ink-soft);
 }
 .entry__spoiler {
   margin-top: 0.15rem;

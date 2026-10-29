@@ -1,14 +1,15 @@
 <script setup lang="ts">
 /**
  * Оболочка всех страниц: ссылка «к содержанию», шапка с навигацией
- * (на узком экране — выпадающее меню), индикатор сохранения, ранг,
- * переключатель темы, баннеры хранилища, уведомления и подвал.
+ * (на узком экране — выпадающее меню), индикатор сохранения, ранг
+ * (на телефоне опыт — в меню), переключатель темы, баннеры хранилища,
+ * уведомления и подвал.
  *
  * Шапка не липкая: на телефоне она не съедает место над полем ответа
  * и не перекрывает содержание (ТЗ §35).
  */
-import { computed, nextTick, ref, watch } from 'vue'
-import { RouterLink, useRoute } from 'vue-router'
+import { computed, nextTick, onUnmounted, ref, watch } from 'vue'
+import { RouterLink, START_LOCATION, useRoute, useRouter } from 'vue-router'
 import { useProgressStore } from '@/stores/progress'
 import { rankFor } from '@/domain/rewards/rewards.engine'
 import { useEffectiveTheme } from '@/composables/useAppearance'
@@ -19,6 +20,7 @@ import ToastStack from './ToastStack.vue'
 
 const store = useProgressStore()
 const route = useRoute()
+const router = useRouter()
 const { theme, toggle } = useEffectiveTheme()
 
 const NAV = [
@@ -55,20 +57,19 @@ function onMenuKey(e: KeyboardEvent) {
 }
 
 // После перехода — закрыть меню и перенести фокус в начало содержимого,
-// чтобы клавиатура и скринридер не оставались в шапке.
-let firstNavigation = true
+// чтобы клавиатура и скринридер не оставались в шапке. Смена одних параметров
+// (?step=, фильтры журнала) — та же страница: фокус остаётся на нажатом.
+// Первая навигация (открытие сайта) фокус не трогает.
 watch(
   () => route.fullPath,
-  async () => {
-    menuOpen.value = false
-    if (firstNavigation) {
-      firstNavigation = false
-      return
-    }
-    await nextTick()
-    main.value?.focus({ preventScroll: true })
-  },
+  () => (menuOpen.value = false),
 )
+const stopFocus = router.afterEach(async (to, from, failure) => {
+  if (failure || from === START_LOCATION || to.path === from.path) return
+  await nextTick()
+  main.value?.focus({ preventScroll: true })
+})
+onUnmounted(stopFocus)
 </script>
 
 <template>
@@ -132,6 +133,9 @@ watch(
               :aria-current="section === item.name ? 'page' : undefined"
             >
               {{ item.label }}
+              <span v-if="item.name === 'achievements' && store.settings.showGamification" class="site-nav__xp">
+                {{ store.progress.xp }}&nbsp;XP
+              </span>
             </RouterLink>
           </li>
         </ul>
@@ -225,6 +229,10 @@ watch(
 .site-nav__link--active {
   border-bottom-color: var(--accent);
   font-weight: 600;
+}
+/* Опыт в пункте «Достижения» — только в меню телефона, где его нет в шапке. */
+.site-nav__xp {
+  display: none;
 }
 
 .shell-header__tools {
@@ -365,27 +373,65 @@ watch(
   }
 }
 
-@media (max-width: 26rem) {
-  /* Четырёхзначный опыт («3120 XP») не должен сжимать название сайта в три строки. */
+/* Телефон: шапка в одну строку — опыт уходит в меню (звание видно на главной
+   и в достижениях), название сайта не переносится. */
+@media (max-width: 30rem) {
+  .rank-chip {
+    display: none;
+  }
+  .site-nav__link {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+  }
+  .site-nav__xp {
+    display: inline;
+    color: var(--gold);
+    font-weight: 600;
+  }
+  .shell-header__inner {
+    column-gap: 0.6rem;
+  }
+  /* Кегль названия подстраивается под место между краем и кнопками:
+     строка «Кино как способ мышления» — около 13.8em. */
   .brand {
+    container: brand / inline-size;
+    min-width: 0;
     gap: 0.4rem;
   }
   .brand__tree {
+    flex: none;
     width: 1.6rem;
     height: 1.6rem;
+  }
+  .brand__title {
+    max-width: none;
+    overflow: hidden;
+    font-size: clamp(0.75rem, (100cqi - 2rem) / 13.8, 1.05rem);
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
   .shell-header__tools {
     gap: 0.3rem;
   }
-  .rank-chip {
-    padding-inline: 0.45rem;
-  }
+  /* Статус сохранения — значком; текст остаётся для скринридера. */
   .shell-header__tools :deep(.save span[role='status']) {
     position: absolute;
     width: 1px;
     height: 1px;
     overflow: hidden;
     clip: rect(0 0 0 0);
+  }
+}
+
+/* Совсем узкий телефон: дерево уступает место названию. */
+@container brand (max-width: 13.5rem) {
+  .brand__tree {
+    display: none;
+  }
+  .brand__title {
+    font-size: clamp(0.75rem, 100cqi / 13.8, 1.05rem);
   }
 }
 </style>

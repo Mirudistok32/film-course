@@ -26,6 +26,33 @@ test('меню на телефоне открывает разделы', async (
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
 })
 
+test('шапка на телефоне в одну строку, опыт — в меню', async ({ page, isMobile }) => {
+  test.skip(!isMobile, 'Раскладка шапки для узкого экрана')
+  await seed(page, fixture)
+  const header = page.locator('.shell-header')
+  await expect(header.locator('.rank-chip')).toBeHidden()
+
+  // Название сайта — одна строка и не заходит под кнопки.
+  const title = await header.locator('.brand__title').boundingBox()
+  const tools = await header.locator('.shell-header__tools').boundingBox()
+  const lineHeight = await header.locator('.brand__title').evaluate((el) => parseFloat(getComputedStyle(el).lineHeight))
+  expect(title!.height).toBeLessThan(lineHeight * 1.5)
+  expect(title!.x + title!.width).toBeLessThanOrEqual(tools!.x)
+
+  // Меню с клавиатуры: открыть, дойти до «Достижений» с опытом, закрыть Escape.
+  const menu = page.getByRole('button', { name: 'Меню' })
+  await menu.focus()
+  await page.keyboard.press('Enter')
+  await expect(menu).toHaveAttribute('aria-expanded', 'true')
+  const nav = page.getByRole('navigation', { name: 'Разделы сайта' })
+  await expect(nav.getByRole('link', { name: /^Достижения \d+ XP$/ })).toBeVisible()
+  await page.keyboard.press('Tab')
+  await expect(nav.getByRole('link', { name: 'Курс' })).toBeFocused()
+  await page.keyboard.press('Escape')
+  await expect(menu).toHaveAttribute('aria-expanded', 'false')
+  await expect(menu).toBeFocused()
+})
+
 test('карта курса на телефоне: ролик уровней и свёрнутая цель', async ({ page, isMobile }) => {
   test.skip(!isMobile, 'Ролик и свёрнутая цель — только на узком экране')
   const errors = trackErrors(page)

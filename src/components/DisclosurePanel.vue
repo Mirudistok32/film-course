@@ -64,8 +64,9 @@ function onToggle(event: Event) {
 .disclosure__summary::-webkit-details-marker {
   display: none;
 }
+/* Внутри блока уровня — его цвет: киноварь на заливке «кинозала» недотягивает до AA. */
 .disclosure__summary:hover .disclosure__title {
-  color: var(--accent);
+  color: var(--tint-ink, var(--accent));
 }
 .disclosure__mark {
   width: 1rem;
@@ -86,6 +87,8 @@ function onToggle(event: Event) {
   padding: 0 0.5em;
   border: 1px solid var(--accent);
   border-radius: var(--radius-s);
+  /* Своя подложка: метка читается и поверх заливки уровня. */
+  background: var(--paper-raised);
   color: var(--accent);
   font-size: 0.8rem;
   font-weight: 500;

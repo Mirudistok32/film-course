@@ -8,7 +8,7 @@ export const FILM_SECTIONS: readonly FilmSection[] = ['lesson', 'exercise', 'not
 
 <script setup lang="ts">
 /**
- * Липкая полоса урока (задача 9.5): вкладки шагов «Перед / Во время / После
+ * Липкая полоса урока: вкладки шагов «Перед / Во время / После
  * просмотра» и переходы к упражнению, заметкам и итогу. Одна полоса вместо
  * двух навигаций — подписи шагов те же, что в адресе (?step=). «Вы здесь» —
  * рамка снизу и aria-current="step" у раздела, который сейчас читают.
@@ -124,12 +124,12 @@ onBeforeUnmount(() => observer?.disconnect())
   border-bottom: 1.5px solid var(--line-strong);
   background: var(--paper);
 }
-/* Прилипшая полоса — во всю ширину окна: фон тенью без влияния на прокрутку. */
+/* Прилипшая полоса — во всю ширину окна: фон тенью, линия — border-image с выносом;
+   ни то ни другое не влияет на прокрутку. */
 .stage-nav--stuck {
-  box-shadow:
-    0 0 0 100vmax var(--paper),
-    0 6px 14px -10px rgb(0 0 0 / 0.45);
-  clip-path: inset(0 -100vmax -1.5rem);
+  box-shadow: 0 0 0 100vmax var(--paper);
+  clip-path: inset(0 -100vmax);
+  border-image: linear-gradient(var(--line-strong) 0 0) 0 0 1 0 / 0 0 1.5px 0 / 0 100vmax;
 }
 
 .stage-nav__tabs,

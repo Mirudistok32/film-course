@@ -26,6 +26,7 @@ import {
   courseStats,
   filmDisplayStatus,
   filmStartStage,
+  filmSteps,
   graduationCriteria,
   graduationStatus,
   hasMarkedFilm,
@@ -310,6 +311,21 @@ describe('страница фильма', () => {
     )
     p = markWatched(p, filmId, T0)
     expect(filmStartStage(p.films[filmId])).toBe('after')
+  })
+
+  it('шаги фильма: просмотр, упражнение (или заметка) и итог — «дальше» первый невыполненный', () => {
+    let p = createInitialProgress(T0)
+    expect(filmSteps(p, filmId)).toEqual({ done: 0, total: 3, lit: [false, false, false], next: 'просмотр' })
+    p = completeExercise(setExerciseResponse(p, filmId, LONG, T0), filmId, T0)
+    expect(filmSteps(p, filmId)).toEqual({ done: 1, total: 3, lit: [false, true, false], next: 'просмотр' })
+    p = markWatched(p, filmId, T0)
+    expect(filmSteps(p, filmId)).toEqual({ done: 2, total: 3, lit: [true, true, false], next: 'итог фильма' })
+    p = completeFilm(p, filmId, T0)
+    expect(filmSteps(p, filmId)).toEqual({ done: 3, total: 3, lit: [true, true, true], next: null })
+
+    const light = markWatched(createInitialProgress(T0), filmId, T0)
+    light.settings = { ...light.settings, lightMode: true }
+    expect(filmSteps(light, filmId).next).toBe('короткая заметка')
   })
 
   it('самопроверка: сначала общие пункты, затем пункты упражнения', () => {

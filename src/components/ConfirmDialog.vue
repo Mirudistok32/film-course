@@ -69,7 +69,7 @@ function onClose() {
   border-radius: var(--radius-m);
   background: var(--paper-raised);
   color: var(--ink);
-  box-shadow: var(--shadow);
+  box-shadow: var(--edge), var(--shadow);
 }
 .dialog::backdrop {
   background: rgb(10 8 6 / 0.55);

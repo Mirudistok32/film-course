@@ -6,8 +6,8 @@ import { GRADUATION_MIN_DECISIONS, hasAnyProgress } from './progress.defaults'
 import type { FilmProgress, Note, NoteKind, UserProgress } from './progress.types'
 import { ANSWER_KEYS } from './progress.types'
 
-export interface Criterion {
-  id: string
+export interface Criterion<Id extends string = string> {
+  id: Id
   label: string
   met: boolean
   detail?: string
@@ -44,9 +44,11 @@ export function hasMeaningfulRecord(p: UserProgress, filmId: string): boolean {
   return p.notes.some((n) => n.filmId === filmId && isMeaningful(n.text))
 }
 
-export function filmCompletionCriteria(p: UserProgress, filmId: string): Criterion[] {
+type FilmCriterionId = 'watched' | 'exercise' | 'note'
+
+export function filmCompletionCriteria(p: UserProgress, filmId: string): Criterion<FilmCriterionId>[] {
   const fp = p.films[filmId]
-  const criteria: Criterion[] = [
+  const criteria: Criterion<FilmCriterionId>[] = [
     { id: 'watched', label: 'Фильм отмечен просмотренным', met: fp?.watchStatus === 'watched' },
   ]
   if (p.settings.lightMode) {
@@ -67,6 +69,37 @@ export function filmCompletionCriteria(p: UserProgress, filmId: string): Criteri
 
 export function canCompleteFilm(p: UserProgress, filmId: string): boolean {
   return filmCompletionCriteria(p, filmId).every((c) => c.met)
+}
+
+/** Короткие названия шагов для полосы прогресса на карточке фильма. */
+const FILM_STEP_NAME: Record<FilmCriterionId | 'completed', string> = {
+  watched: 'просмотр',
+  exercise: 'упражнение',
+  note: 'короткая заметка',
+  completed: 'итог фильма',
+}
+
+/**
+ * Путь фильма: условия завершения и сам итог. Шаги можно делать
+ * не по порядку, поэтому «дальше» — первый невыполненный, а `lit` —
+ * какие именно шаги выполнены, по порядку.
+ */
+export function filmSteps(
+  p: UserProgress,
+  filmId: string,
+): { done: number; total: number; lit: boolean[]; next: string | null } {
+  const steps: { id: FilmCriterionId | 'completed'; met: boolean }[] = [
+    ...filmCompletionCriteria(p, filmId),
+    { id: 'completed', met: Boolean(p.films[filmId]?.completedAt) },
+  ]
+  const next = steps.find((s) => !s.met)
+  const lit = steps.map((s) => s.met)
+  return {
+    done: lit.filter(Boolean).length,
+    total: steps.length,
+    lit,
+    next: next ? FILM_STEP_NAME[next.id] : null,
+  }
 }
 
 /** Шаги урока фильма (ТЗ §12.2–12.4). */

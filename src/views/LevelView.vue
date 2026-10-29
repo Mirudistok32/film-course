@@ -4,8 +4,9 @@
  * фильмы со статусами, прогресс, условие завершения с итоговой заметкой,
  * термины уровня и кнопка продолжения к первому незавершённому фильму.
  * В строгом порядке закрытый уровень открыт для чтения, но не для записи.
+ * Печать «уровень пройден» проигрывает оттиск только сразу после завершения.
  */
-import { computed, nextTick, ref } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import { RouterLink, useRoute, type RouteLocationRaw } from 'vue-router'
 import { useProgressStore } from '@/stores/progress'
 import { usePageTitle } from '@/composables/usePageTitle'
@@ -74,6 +75,15 @@ const filmsWord = (n: number) => plural(n, ['фильма', 'фильмов', '�
 const completion = ref<HTMLElement | null>(null)
 const completionTitle = ref<HTMLElement | null>(null)
 const message = ref('')
+/** Уровень завершён на глазах — печати проигрывают оттиск (сбрасывается при смене уровня). */
+const pressed = ref(false)
+watch(
+  () => level.value?.id,
+  () => {
+    message.value = ''
+    pressed.value = false
+  },
+)
 
 const reflection = computed({
   get: () => (level.value ? (p.value.levels[level.value.id]?.reflection ?? '') : ''),
@@ -87,7 +97,9 @@ function finishLevel() {
   const target = level.value
   if (!target || locked.value || !stats.value?.canComplete) return
   store.apply((q, now) => completeLevel(q, target, now))
-  if (completedAt.value) message.value = `Уровень ${target.number} пройден. Итоговую заметку можно дополнять и дальше.`
+  if (!completedAt.value) return
+  pressed.value = true
+  message.value = `Уровень ${target.number} пройден. Итоговую заметку можно дополнять и дальше.`
 }
 
 const scrollTo = useScrollTo()
@@ -155,7 +167,9 @@ const cta = computed<Cta | null>(() => {
 
       <aside class="card status" :data-tint="levelTint(level.number)" aria-label="Ваш прогресс на уровне">
         <StatusBadge :level="status" />
+        <!-- key: при переходе к другому уровню полоса появляется заново, без заливки чужих кадров. -->
         <ProgressMeter
+          :key="level.id"
           :value="stats.completed"
           :max="stats.total"
           :label="`${stats.completed} из ${stats.total} ${filmsWord(stats.total)} пройдено · просмотрено ${stats.watched}`"
@@ -166,7 +180,7 @@ const cta = computed<Cta | null>(() => {
           <p class="status__detail">{{ cta.detail }}</p>
         </template>
         <span v-if="completedAt" class="status__stamp" aria-hidden="true">
-          <HankoStamp text="уровень пройден" :center="String(level.number)" />
+          <HankoStamp text="уровень пройден" :center="String(level.number)" :press="pressed" />
         </span>
       </aside>
     </header>
@@ -252,7 +266,7 @@ const cta = computed<Cta | null>(() => {
     <section ref="completion" class="completion card" aria-labelledby="completion-title">
       <h2 id="completion-title" ref="completionTitle" tabindex="-1">Завершение уровня</h2>
       <div v-if="completedAt" class="completion__done">
-        <HankoStamp class="completion__stamp" text="уровень пройден" :center="String(level.number)" />
+        <HankoStamp class="completion__stamp" text="уровень пройден" :center="String(level.number)" :press="pressed" />
         <p>
           <strong>Уровень пройден</strong> ({{ formatDate(completedAt) }}). Завершение не отменяется: можно
           пересматривать фильмы и дополнять итоговую заметку.
@@ -354,7 +368,7 @@ const cta = computed<Cta | null>(() => {
 }
 .head__source {
   font-size: 0.9rem;
-  color: var(--ink-faint);
+  color: var(--ink-soft);
 }
 
 .status {
@@ -461,7 +475,7 @@ const cta = computed<Cta | null>(() => {
   border-top: 4px solid var(--tint-ink);
   background: linear-gradient(180deg, color-mix(in srgb, var(--tint) 70%, var(--paper-raised)), var(--paper-raised) 8rem);
   border-radius: var(--radius-s) var(--radius-s) var(--radius-m) var(--radius-m);
-  box-shadow: var(--shadow);
+  box-shadow: var(--edge), var(--shadow);
 }
 .example p {
   font-size: 0.97rem;
@@ -499,13 +513,13 @@ const cta = computed<Cta | null>(() => {
   border: 1px solid var(--line);
   border-radius: var(--radius-m);
   background: linear-gradient(120deg, color-mix(in srgb, var(--tint) 40%, var(--paper-raised)), var(--paper-raised) 55%);
-  box-shadow: var(--shadow);
+  box-shadow: var(--edge), var(--shadow);
 }
 .film--completed,
 .film--reviewing {
   border-color: color-mix(in srgb, var(--moss) 55%, var(--line));
 }
-/* Вся карточка кликабельна через растянутую ссылку; фокус рисуется на карточке. */
+/* Вся карточка кликабельна через растянутую ссылку; фокус рисуется на карточке цветом уровня. */
 .film:has(.film__link:focus-visible) {
   outline: 3px solid var(--focus);
   outline-offset: 3px;

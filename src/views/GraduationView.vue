@@ -364,7 +364,7 @@ const filled = (d: GraduationWork['decisions'][number]) => isMeaningful(d.observ
 }
 .criteria-card__count {
   font-weight: 600;
-  color: var(--accent);
+  color: var(--tint-ink);
 }
 .criteria-card__note {
   font-size: 0.9rem;

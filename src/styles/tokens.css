@@ -9,7 +9,9 @@
  *
  * Тема выбирается так: data-theme="light" | "dark" на <html> — явный выбор
  * пользователя; без атрибута — по системной настройке.
- * Пары «текст/фон» подобраны с контрастом не ниже WCAG AA (см. план, этап 5.1).
+ * Пары «текст/фон» — не ниже WCAG AA (4.5:1), в том числе на заливке уровня:
+ * таблица — node scripts/contrast.mjs, страницы целиком проверяет npm run shots.
+ * --ink-faint на заливке уровня в «кинозале» не годится (≈ 3:1) — там --ink-soft или --tint-ink.
  */
 
 :root {
@@ -20,7 +22,7 @@
   --paper-sunken: #efe5d6;
   --ink: #2b2230;
   --ink-soft: #594d5c;
-  --ink-faint: #6f6372;
+  --ink-faint: #685c6b;
   --line: #e2d5c6;
   --line-strong: #9a8a90;
   --accent: #9a2e1c;
@@ -31,6 +33,8 @@
   --gold: #835d17;
   --focus: #26507a;
   --shadow: 0 1px 0 rgb(60 40 70 / 0.05), 0 10px 26px -14px rgb(80 50 90 / 0.35);
+  /* Кромка света по верхнему краю карточки — нужна только в темноте. */
+  --edge: 0 0 #0000;
 
   --tint-rose: #f9dde0;
   --tint-rose-ink: #9b3f4f;
@@ -44,6 +48,15 @@
   --tint-sky-ink: #34608f;
   --tint-lavender: #e6def6;
   --tint-lavender-ink: #5f4a9a;
+  /* Насколько заливка уровня подсвечена его «чернилами» (см. base.css, [data-tint]). */
+  --tint-lift: 0%;
+  /* Яркость силуэтов на обложке фильма (FilmCover). */
+  --cover-ink: 100%;
+
+  /* Пятна света на фоне страницы. */
+  --glow-1: color-mix(in srgb, var(--tint-rose) 75%, transparent);
+  --glow-2: color-mix(in srgb, var(--tint-sky) 75%, transparent);
+  --glow-3: color-mix(in srgb, var(--tint-butter) 55%, transparent);
 
   --grain-opacity: 0.07;
   --grain-blend: multiply;
@@ -92,21 +105,22 @@
     color-scheme: dark;
 
     --paper: #16131a;
-    --paper-raised: #201c25;
+    --paper-raised: #221c1f;
     --paper-sunken: #0f0d12;
     --ink: #efe6dc;
-    --ink-soft: #c2b5b8;
+    --ink-soft: #cdc1c3;
     --ink-faint: #a0939a;
     --line: #3a3340;
     --line-strong: #7d7080;
     --accent: #e48a70;
     --accent-ink: #1a120d;
     --accent-wash: rgb(228 138 112 / 0.12);
-    --moss: #adbb82;
-    --moss-wash: rgb(173 187 130 / 0.14);
+    --moss: #bfcc96;
+    --moss-wash: rgb(191 204 150 / 0.14);
     --gold: #d6b366;
     --focus: #9cc3e6;
-    --shadow: 0 1px 0 rgb(0 0 0 / 0.4), 0 10px 24px -12px rgb(0 0 0 / 0.8);
+    --shadow: 0 1px 0 rgb(0 0 0 / 0.5), 0 2px 6px rgb(0 0 0 / 0.3), 0 14px 30px -12px rgb(0 0 0 / 0.9);
+    --edge: inset 0 1px 0 rgb(255 236 222 / 0.08);
 
     --tint-rose: #3b252c;
     --tint-rose-ink: #f2b0bb;
@@ -120,6 +134,13 @@
     --tint-sky-ink: #a6c8ee;
     --tint-lavender: #2b2540;
     --tint-lavender-ink: #c9bbf2;
+    --tint-lift: 18%;
+    --cover-ink: 72%;
+    --cover-caption: var(--paper-sunken);
+
+    --glow-1: rgb(242 176 187 / 0.12);
+    --glow-2: rgb(166 200 238 / 0.12);
+    --glow-3: rgb(233 212 142 / 0.06);
 
     --grain-opacity: 0.11;
     --grain-blend: screen;
@@ -149,21 +170,22 @@
   color-scheme: dark;
 
   --paper: #16131a;
-  --paper-raised: #201c25;
+  --paper-raised: #221c1f;
   --paper-sunken: #0f0d12;
   --ink: #efe6dc;
-  --ink-soft: #c2b5b8;
+  --ink-soft: #cdc1c3;
   --ink-faint: #a0939a;
   --line: #3a3340;
   --line-strong: #7d7080;
   --accent: #e48a70;
   --accent-ink: #1a120d;
   --accent-wash: rgb(228 138 112 / 0.12);
-  --moss: #adbb82;
-  --moss-wash: rgb(173 187 130 / 0.14);
+  --moss: #bfcc96;
+  --moss-wash: rgb(191 204 150 / 0.14);
   --gold: #d6b366;
   --focus: #9cc3e6;
-  --shadow: 0 1px 0 rgb(0 0 0 / 0.4), 0 10px 24px -12px rgb(0 0 0 / 0.8);
+  --shadow: 0 1px 0 rgb(0 0 0 / 0.5), 0 2px 6px rgb(0 0 0 / 0.3), 0 14px 30px -12px rgb(0 0 0 / 0.9);
+  --edge: inset 0 1px 0 rgb(255 236 222 / 0.08);
 
   --tint-rose: #3b252c;
   --tint-rose-ink: #f2b0bb;
@@ -177,6 +199,13 @@
   --tint-sky-ink: #a6c8ee;
   --tint-lavender: #2b2540;
   --tint-lavender-ink: #c9bbf2;
+  --tint-lift: 18%;
+  --cover-ink: 72%;
+  --cover-caption: var(--paper-sunken);
+
+  --glow-1: rgb(242 176 187 / 0.12);
+  --glow-2: rgb(166 200 238 / 0.12);
+  --glow-3: rgb(233 212 142 / 0.06);
 
   --grain-opacity: 0.11;
   --grain-blend: screen;

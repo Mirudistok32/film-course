@@ -1,12 +1,14 @@
 // Визуальная проверка собранного dist/index.html так, как его открывает пользователь:
 // по file:// в Chrome, в обеих темах, на ширине ноутбука и телефона.
-// Пишет PNG в .screenshots/ и выводит ошибки консоли и горизонтальный скролл.
+// Пишет PNG в .screenshots/ и выводит ошибки консоли, горизонтальный скролл
+// и текст с контрастом ниже AA (scripts/contrast.mjs).
 //
 //   npm run build && npm run shots            — все страницы
 //   npm run shots -- film                     — только сценарии, в имени которых есть «film»
 import { existsSync, mkdirSync, readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { chromium } from '@playwright/test'
+import { auditPage } from './contrast.mjs'
 
 const ROOT = resolve(import.meta.dirname, '..')
 const DIST = resolve(ROOT, 'dist/index.html')
@@ -115,6 +117,7 @@ function homeGraduation(p) {
  * mutate — поправить прогресс после загрузки (уже в формате v2),
  * click — нажать по порядку первые видимые кнопки/summary с этим текстом (раскрыть спойлер, открыть диалог),
  * upload — выбрать файл в поле импорта (до нажатий из click),
+ * focus — поставить фокус с клавиатуры на n-й элемент по селектору (проверить кольцо фокуса),
  * viewportOnly — снять только окно, а не всю страницу (проверить прокрутку к блоку).
  */
 const PAGES = [
@@ -127,9 +130,14 @@ const PAGES = [
   { name: 'level', hash: '#/course/level-01', seed: true },
   { name: 'level-done', hash: '#/course/level-01', raw: advanced },
   { name: 'level-locked', hash: '#/course/level-03', raw: advanced },
+  // Кольцо фокуса у кадров плёнки, ролика и карточек фильмов — цветом уровня.
+  { name: 'course-focus', hash: '#/course', seed: true, focus: ['.frame__link', 1], viewportOnly: true },
+  { name: 'course-reel-focus', hash: '#/course', seed: true, focus: ['.reel__cell', 2], viewportOnly: true, mobileOnly: true },
+  { name: 'level-focus', hash: '#/course/level-01', seed: true, focus: ['.film__link', 1], viewportOnly: true },
   { name: 'film', hash: '#/film/the-cabinet-of-dr-caligari', seed: true },
   { name: 'film-before', hash: '#/film/alexander-nevsky' },
   { name: 'film-during', hash: '#/film/alexander-nevsky?step=during' },
+  { name: 'film-watched', hash: '#/film/alexander-nevsky', click: ['Отметить просмотр'], viewportOnly: true, settle: 700 },
   { name: 'film-done', hash: '#/film/the-cabinet-of-dr-caligari', raw: filmDone, click: ['Посмотреть пример разбора'] },
   // Липкая полоса урока: переход к заметкам из полосы (снимок окна, после плавной прокрутки).
   { name: 'film-stuck', hash: '#/film/the-cabinet-of-dr-caligari', raw: filmDone, click: ['Заметки'], viewportOnly: true, settle: 900 },
@@ -215,10 +223,24 @@ for (const view of VIEWS) {
       await tab.locator(':is(button, summary, a):visible', { hasText: text }).first().click()
       await tab.waitForTimeout(200)
     }
+    if (page.focus) {
+      const [selector, n] = page.focus
+      await tab.locator(selector).nth(n).focus()
+      // Shift+Tab и Tab возвращают фокус на место, но уже «с клавиатуры» — для :focus-visible.
+      await tab.keyboard.press('Shift+Tab')
+      await tab.keyboard.press('Tab')
+      await tab.waitForTimeout(400)
+    }
     if (page.settle) await tab.waitForTimeout(page.settle)
 
     if (await tab.evaluate(() => document.documentElement.scrollWidth > window.innerWidth)) {
       problems.push(`${name}: горизонтальная прокрутка`)
+    }
+    const seen = new Set()
+    for (const f of await tab.evaluate(auditPage)) {
+      const line = `${name}: контраст ${f.ratio} < ${f.need} (${f.colors}) — <${f.tag} class="${f.cls}"> «${f.text}»`
+      if (!seen.has(f.cls + f.ratio)) problems.push(line)
+      seen.add(f.cls + f.ratio)
     }
     await tab.screenshot({ path: resolve(OUT, `${name}.png`), fullPage: !page.viewportOnly })
     count++
@@ -233,4 +255,4 @@ if (problems.length) {
   console.log(`Проблемы (${problems.length}):\n${problems.join('\n')}`)
   process.exit(1)
 }
-console.log('Ошибок консоли и горизонтальной прокрутки нет.')
+console.log('Ошибок консоли, горизонтальной прокрутки и текста с низким контрастом нет.')
