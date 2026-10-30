@@ -57,6 +57,7 @@
 | Формат хранилища и JSON-копии, миграции, импорт | [docs/save-format.md](docs/save-format.md) |
 | Почему сделано так, отступления от ТЗ | [docs/decisions.md](docs/decisions.md) |
 | ТЗ | [docs/spec.md](docs/spec.md) — только нужный раздел |
+| Обязательные рекомендации (OWASP, WCAG…) | `../agent-base/docs/principles.md` → «Стандарты» |
 
 ## Нельзя
 
